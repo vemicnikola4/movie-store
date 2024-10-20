@@ -12,4 +12,9 @@ class Movie extends Model
     {
         return $this->belongsToMany(Genre::class,'genre_movies');
     }
+
+    public function people(): BelongsToMany
+    {
+        return $this->belongsToMany(Person::class,'movie_people');
+    }
 }
