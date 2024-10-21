@@ -9,6 +9,8 @@ use GuzzleHttp\Client;
 use App\Models\Movie;
 
 use App\Interfaces\MovieRepositoryInterface;
+use App\Repositories\MovieRepository;
+
 use App\Services\ApiService;
 use App\Services\MediaService;
 
@@ -47,6 +49,10 @@ class MovieService
     {
         $this->movieRepository->deleteAll();
 
+    }
+    public function getOne($id) : Movie 
+    {
+        return Movie::find($id);
     }
 
 

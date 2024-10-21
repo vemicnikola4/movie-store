@@ -13,32 +13,34 @@ class MediaRepository implements MediaRepositoryInterface{
         protected Media $model
     ){}
 
-    public function createMedia( string $filePath,$imageContent) : Media
-     {
-            $extention = substr($filePath,strpos($filePath,'.')+1 );
+    public function getOne($id) : Media 
+    {
+        return Media::find($id);
+    }
 
-            $imageExists = Media::where('path',$filePath)->first();
-          
-            if (  !$imageExists ){
-                try {
-                    // Create a new movie entry
-                    Storage::disk('public')->put($filePath, $imageContent);
-                    
-                    $media = new Media;
-                    $media->path = $filePath;
-                    $media->extention = $extention;
-                    $media->alt = 'image';
-                    $media->save();
-                    return $media;
-                } catch (QueryException $e) {
-                    // Handle database-related exceptions
-                    throw new MediaException('Database error while creating Media: ' . $e->getMessage());
-                } catch (\Exception $e) {
-                    // Handle any other exceptions
-                    throw new MediaException('An unexpected error occurred: ' . $e->getMessage());
-                } 
-            }
-            return $imageExists;
+    public function getOneWithPath($path) : ?Media 
+    {
+        return Media::where('path',$path)->first();
+    }
+
+
+    public function create( array $data) : Media
+    {
+        try {
+            $media = new Media;
+            $media->path = $data['path'];
+            $media->extention = $data['extention'];
+            $media->alt = $data['alt'];
+            $media->save();
+            return $media;
+            
+        } catch (QueryException $e) {
+            // Handle database-related exceptions
+            throw new MediaException('Database error while creating Media: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new MediaException('An unexpected error occurred: ' . $e->getMessage());
+        } 
 
     }
 }

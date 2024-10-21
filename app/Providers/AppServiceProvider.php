@@ -11,6 +11,9 @@ use App\Interfaces\MovieRepositoryInterface;
 use App\Repositories\MediaRepository;
 use App\Interfaces\MediaRepositoryInterface;
 
+use App\Repositories\PersonRepository;
+use App\Interfaces\PersonRepositoryInterface;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -20,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(MovieRepositoryInterface::class , MovieRepository::class);
         $this->app->bind(MediaRepositoryInterface::class , MediaRepository::class);
+        $this->app->bind(PersonRepositoryInterface::class , PersonRepository::class);
     }
 
     /**

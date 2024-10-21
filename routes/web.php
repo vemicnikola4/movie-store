@@ -34,6 +34,8 @@ Route::middleware(AdminMiddleware::class)->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard',[AdminController::class,'index'])->name('dashboard');
         Route::get('/get_movies',[ApiController::class,'getMovies'])->name('get_movies');
+        Route::get('/get_people/{movieId}',[ApiController::class,'getPeople'])->name('get_people');
+        Route::get('/delete_data',[ApiController::class,'deleteDatabaseData'])->name('delete_data');
 
         // Route::get('/get_movies',[ApiController::class,'getMovies'])->name('get_movies');
         // Route::get('/get_genres',[ApiController::class,'getGenres'])->name('get_genres');

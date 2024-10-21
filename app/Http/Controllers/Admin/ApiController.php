@@ -29,7 +29,31 @@ class ApiController extends Controller
 
 
         $this->movieService->deleteMovies();
+        
         $this->movieService->insertMovies();
+
+        // $allMovies = Movie::all();
+
+        // foreach($allMovies as $movie){
+        //     $this->peopleService->insertPeople($movie, $movie['api_id']);
+        // }
+
+    }
+    public function getPeople($movieApiId){
+
+        set_time_limit(300);
+
+        $this->peopleService->insertPeople($movieApiId);
+
+
+    } 
+    public function deleteDatabaseData(){
+
+        
+        $this->movieService->deleteMovies();
+        
+        $this->peopleService->deletePeople();
+
 
         // $allMovies = Movie::all();
 

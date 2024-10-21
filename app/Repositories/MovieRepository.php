@@ -1,6 +1,6 @@
 <?php
 namespace App\Repositories;
-
+use Illuminate\Database\Eloquent\Collection;
 use App\Interfaces\MovieRepositoryInterface;
 use App\Models\Movie;
 use Illuminate\Database\QueryException;
@@ -43,6 +43,14 @@ class MovieRepository implements MovieRepositoryInterface{
     {
         Movie::query()->delete();
 
+    }
+    public function getAll(): Collection
+    {
+        return Movie::all();
+    }
+    public function getOne($id) : Movie
+    {
+        return Movie::find($id);
     }
 
 }

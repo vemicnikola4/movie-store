@@ -65,6 +65,7 @@ class ApiService
            
 
             if ($response->getStatusCode() === 200) {
+                
                 return $response->getBody()->getContents();
     
                 // return response()->json(['success' => true, 'path' => $filePath]);

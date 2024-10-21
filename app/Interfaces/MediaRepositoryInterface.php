@@ -5,6 +5,8 @@ namespace App\Interfaces;
 
 interface MediaRepositoryInterface{
     
-    public function createMedia(string $filePath,$imageContent);
+    public function create(array $data);
+    public function getOne($id);
+    public function getOneWithPath(string $path);
 
 }
