@@ -65,7 +65,7 @@ class ApiService
            
 
             if ($response->getStatusCode() === 200) {
-                
+
                 return $response->getBody()->getContents();
     
                 // return response()->json(['success' => true, 'path' => $filePath]);
@@ -97,7 +97,6 @@ class ApiService
                 
             // return response()->json($allMovies);
         } catch (\Exception $e) {
-            dd('error');
 
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -121,8 +120,33 @@ class ApiService
                 
             // return response()->json($allMovies);
         } catch (\Exception $e) {
-            dd('error');
 
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    public function fetchGenres() : array 
+    {
+        $allGenres = [];
+        try {
+        
+                // Fetch the popular genres
+                $response = $this->client->request('GET', 'https://api.themoviedb.org/3/genre/movie/list', [
+                    'query' => [
+                        'api_key' => $this->apiKey,
+                    ],
+                ]);
+        
+                if ($response->getStatusCode() === 200) {
+                    $data = json_decode($response->getBody(), true);
+                    $allGenres = array_merge($allGenres, $data); // Combine results from all pages
+                    return $allGenres;
+                } else {
+                    return response()->json(['error' => 'Request failed on page ' . $page], $response->getStatusCode());
+                }
+                    
+        
+            // return response()->json($allMovies);
+        } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }

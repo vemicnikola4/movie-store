@@ -10,28 +10,28 @@ class PersonRepository implements PersonRepositoryInterface{
         protected Person $model
     ){}
 
-    public function create(array $person)
+    public function create(array $data)
     {
         
         try {
-            // Create a new person record
-            $dbPerson = new Person;
-            $dbPerson->name = $person['name'];
-            $dbPerson->gender = $person['gender'];
-            $dbPerson->birthday_date = $person['birthday'];
-            $dbPerson->biography = $person['biography'];
-            $dbPerson->place_of_birth = $person['place_of_birth'];
-            $dbPerson->known_for_department = $person['known_for_department'];
-            $dbPerson->media_id = $person['media_id'];
-            $dbPerson->save();
-            $dbPerson->movies()->attach($person['movie_id']);
+            $dbPerson = Person::create([
+                'name'=>$data['name'],
+                'gender'=>$data['gender'],
+                'birthday_date'=>$data['birthday'],
+                'biography'=>$data['biography'],
+                'place_of_birth'=>$data['place_of_birth'],
+                'known_for_department'=>$data['known_for_department'],
+                'media_id'=>$data['media_id'],
+            ]);
+            
+            $dbPerson->movies()->attach($data['movie_id']);
            
         } catch (QueryException $e) {
             // Handle database-related exceptions
-            throw new PersonException('Database error while creating Person: ' . $e->getMessage());
+            throw new QueryException('Database error while creating Person: ' . $e->getMessage());
         } catch (\Exception $e) {
             // Handle any other exceptions
-            throw new PersonException('An unexpected error occurred: ' . $e->getMessage());
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         } 
        
     }
@@ -41,12 +41,12 @@ class PersonRepository implements PersonRepositoryInterface{
             // Create a new person record
             Person::query()->delete();
            
-        } catch (QueryException $e) {
+        }catch (QueryException $e) {
             // Handle database-related exceptions
-            throw new PersonException('Database error while creating Person: ' . $e->getMessage());
+            throw new QueryException('Database error while deleting Person: ' . $e->getMessage());
         } catch (\Exception $e) {
             // Handle any other exceptions
-            throw new PersonException('An unexpected error occurred: ' . $e->getMessage());
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         } 
 
     }
