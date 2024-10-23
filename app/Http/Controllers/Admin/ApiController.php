@@ -13,16 +13,18 @@ use App\Models\Person;
 
 use App\Services\MovieService;
 use App\Services\PeopleService;
+use App\Services\GenreService;
 
 class ApiController extends Controller
 {
     protected $movieService;
     protected $peopleService;
 
-    public function __construct(MovieService $movieService,PeopleService $peopleService)
+    public function __construct(MovieService $movieService,PeopleService $peopleService,GenreService $genreService)
     {
         $this->movieService = $movieService;
         $this->peopleService = $peopleService;
+        $this->genreService = $genreService;
     }
 
     public function getMovies(){
@@ -39,11 +41,11 @@ class ApiController extends Controller
         // }
 
     }
-    public function getPeople($movieApiId){
+    public function getPeople($movieId){
 
         set_time_limit(300);
 
-        $this->peopleService->insertPeople($movieApiId);
+        $this->peopleService->insertPeople($movieId);
 
 
     } 
@@ -55,124 +57,17 @@ class ApiController extends Controller
         $this->peopleService->deletePeople();
 
 
-        // $allMovies = Movie::all();
-
-        // foreach($allMovies as $movie){
-        //     $this->peopleService->insertPeople($movie, $movie['api_id']);
-        // }
-
+       
     }
  
-    
+    public function getGenres(){
+        $this->genreService->insertGenres();
+
+        return inertia("Admin/Dashboard");
+    }
 
 
 
-    // public function getGenres(){
-    //     $client = new Client();
-    //     $apiKey = '0e3cf6c006f3a9f560d6b0500dda7520'; // Replace with your TMDb API key
-    //     $allGenres = [];
 
-    //     try {
-        
-    //             // Fetch the popular genres
-    //             $response = $client->request('GET', 'https://api.themoviedb.org/3/genre/movie/list', [
-    //                 'query' => [
-    //                     'api_key' => $apiKey,
-    //                 ],
-    //             ]);
-
-    //             if ($response->getStatusCode() === 200) {
-    //                 $data = json_decode($response->getBody(), true);
-    //                 $allGenres = array_merge($allGenres, $data); // Combine results from all pages
-    //             } else {
-    //                 return response()->json(['error' => 'Request failed on page ' . $page], $response->getStatusCode());
-    //             }
-            
-
-    //         // return response()->json($allMovies);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => $e->getMessage()], 500);
-    //     }
-    //     foreach ( $allGenres['genres'] as $genre ){
-    //         $genreExists = Genre::where('id',$genre['id'])->first();
-    //         if ( !$genreExists){
-    //             $dbGenre = new Genre;
-    //             $dbGenre->id= $genre['id'];
-    //             $dbGenre->name= $genre['name'];
-    //             $dbGenre->save();
-    //         }
-            
-                
-
-    //         }
-    //         $allMovies = Movie::all();
-    //         foreach($allMovies as $movie){
-    //             try {
-        
-    //                 // Fetch the popular genres
-    //                 $response = $client->request('GET', 'https://api.themoviedb.org/3/movie/'.$movie['api_id'], [
-    //                     'query' => [
-    //                         'api_key' => $apiKey,
-    //                     ],
-    //                 ]);
-        
-    //                 if ($response->getStatusCode() === 200) {
-    //                     $data = json_decode($response->getBody(), true);
-    //                 } else {
-    //                     return response()->json(['error' => 'Request failed on page ' . $page], $response->getStatusCode());
-    //                 }
-    //                 $genresIds = [];
-    //                 foreach($data['genres'] as $g ){
-    //                     $genresIds[]= $g['id'];
-    //                 }
-    //                 $movie->genres()->attach($genresIds);
-                    
-        
-    //             // return response();
-    //         } catch (\Exception $e) {
-    //             return response()->json(['error' => $e->getMessage()], 500);
-    //             }
-    //         }
-    // }
-
-
-    // public function getPeople(){
-    //     $client = new Client();
-    //     $apiKey = '0e3cf6c006f3a9f560d6b0500dda7520'; 
-
-    //     $allMovies = Movie::all();
-    //     foreach ($allMovies as $movie){
-    //         try {
-       
-    //             // Fetch the popular genres
-    //             $response = $client->request('GET', 'https://api.themoviedb.org/3/movie/'.$movie['api_id'].'/credits', [
-    //                 'query' => [
-    //                     'api_key' => $apiKey,
-    //                 ],
-    //             ]);
-    
-    //             if ($response->getStatusCode() === 200) {
-    //                 $credits = json_decode($response->getBody(), true);
-    //             } else {
-    //                 return response()->json(['error' => 'Request failed on page ' . $page], $response->getStatusCode());
-    //             }
-                
-    //             foreach($credits['cast']as $cast){
-    //                 print_r($cast);
-    //                 $castExists = People::find($cast['id']);
-    //                 if ( !$castExists){
-    //                     $person = new Person;
-    //                     $person->
-    //                 }
-    //             }
-    //             dd($credits);
-    //         // return response()->json($allMovies);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => $e->getMessage()], 500);
-    //     }
-    //     }
-        
-
-    // }
 
 }

@@ -18,8 +18,8 @@ use App\Services\MediaService;
 
 class MovieService
 {
-    protected $apiService;
-    protected $movieRepository;
+    // protected $apiService;
+    // protected $movieRepository;
 
     public function __construct(ApiService $apiService,MediaService $mediaService,MovieRepositoryInterface  $movieRepository)
     {
@@ -39,6 +39,7 @@ class MovieService
         }
     }
     public function insertOneMovie($movie){
+        
         $media = $this->mediaService->downloadImage($movie['poster_path']);
         $movie['media_id'] = $media->id;
         

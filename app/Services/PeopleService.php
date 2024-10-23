@@ -14,7 +14,6 @@ use App\Interfaces\PersonRepositoryInterface;
 
 class PeopleService{
 
-    protected $apiService;
 
     public function __construct(ApiService $apiService,MediaService $mediaService,PersonRepositoryInterface $personRepository,MovieService $movieService)
     {
@@ -29,7 +28,9 @@ class PeopleService{
     public function insertPeople( $movieId ) : void
     {
             $movie = $this->movieService->getOne($movieId);
+
             $credits = $this->apiService->fetchPeople($movie->api_id);
+
             $castIds = [];
             $crewIds = [];
             foreach($credits['cast']as $cast){
@@ -51,6 +52,7 @@ class PeopleService{
 
 
             foreach($credits['crew']as $crew){
+
                 if (!in_array($crew['id'],$crewIds )){
                     $crewIds[]=$crew['id'];
                     $person = $this->apiService->fetchPerson($crew['id']);
@@ -69,7 +71,6 @@ class PeopleService{
     public function deletePeople() : void
     {
         $this->personRepository->deleteAll();
-
     }
 
 }
