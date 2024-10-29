@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Models\Movie;
+use App\Models\Media;
 
 use App\Interfaces\MovieRepositoryInterface;
 use App\Repositories\MovieRepository;
@@ -53,8 +54,77 @@ class MovieService
     }
     public function getOne($id) : Movie 
     {
-        return Movie::find($id);
+        $movie = $this->movieRepository->getOne($id);
+        $media = $this->mediaService->getOne($movie->media_id);
+
+        $movie['image_path'] = asset('storage/'.$media->path);
+
+        return $movie;
     }
+
+    public function addGenres(){
+
+        $allMovies = $this->apiService->fetchMovies();
+
+        foreach ( $allMovies as $movie ){
+
+            $this->movieRepository->addGenres($movie);
+            
+        }
+
+    }
+    public function allMovies(){
+
+        return $this->movieRepository->getAll();
+    }
+
+    public function adminGetMovies($request)
+    {
+        $query = Movie::query();
+
+        if ( $request['sort_by_release_date'] ){
+            $query->orderBy('release_date',$request['sort_by_release_date']);
+        }
+        if ( $request['sort_by_title'] ){
+            $query->orderBy('title',$request['sort_by_title']);
+        }
+        if ( $request['sort_by_price'] ){
+            $query->orderBy('price',$request['sort_by_price']);
+        }
+
+        if ( $request['title']){
+            $query->where( "title",'like',"%".$request['title']."%");
+        }
+        if($request['price'] )
+        {
+            $query->where('price', '=', $request['price']);
+        }
+
+
+        // $movies = $query->get();
+        $movies = $this->movieRepository->movieQuery($query);
+
+        
+        
+        foreach($movies as $movie){
+            
+            $movie['people']=$movie->people;
+            $media = $this->mediaService->getOne($movie->media_id);
+
+            $movie['image_path']= asset('storage/'.$media->path);
+           
+        }
+        return $movies;
+        
+
+    }
+    public function adminUpdateMovie($request) : void 
+    {
+        $this->movieRepository->update($request);
+       
+
+    }
+    
 
 
     

@@ -75,6 +75,12 @@ class MediaService{
         }
 
     }
+    public function getMediaWithPath($path){
+        return $this->mediaRepository->getOneWithPath($path);
+    }
+    public function getOne($id){
+        return $this->mediaRepository->getOne($id);
+    }
 
 
 

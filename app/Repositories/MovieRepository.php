@@ -3,8 +3,12 @@ namespace App\Repositories;
 use Illuminate\Database\Eloquent\Collection;
 use App\Interfaces\MovieRepositoryInterface;
 use App\Models\Movie;
+use App\Models\Media;
+use App\Models\Genre;
 use Illuminate\Database\QueryException;
 use App\Exceptions\MovieException;
+use Illuminate\Support\Facades\Storage;
+
 
 class MovieRepository implements MovieRepositoryInterface{
 
@@ -28,15 +32,10 @@ class MovieRepository implements MovieRepositoryInterface{
                     'media_id'=>$data['media_id'],
                     'price'=>$prices[mt_rand(0,6)],
                 ]);
-            } catch (QueryException $e) {
-                // Handle database-related errors
-                throw new QueryException('Database error while creating Movie: ' .$e->getMessage());
-                // return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
-            } catch (\Exception $e) {
-                // Handle other exceptions
-                throw new \Exception('An unexpected error occurred' .$e->getMessage());
-
-            }
+            }catch (\Exception $e) {
+                // Handle any other exceptions
+                throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+            } 
            
         }
        
@@ -49,11 +48,62 @@ class MovieRepository implements MovieRepositoryInterface{
     }
     public function getAll(): Collection
     {
-        return Movie::all();
+        try{
+           
+            return Movie::all();
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+        
     }
     public function getOne($id) : Movie
     {
         return Movie::find($id);
     }
+        
+    public function addGenres($movie){
+        try{
+            $dbMovie = Movie::where('api_id',$movie['id'])->first();
+            $dbMovie->genres()->attach($movie['genre_ids']);
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+        
+    }
+    public function moviePersonExists($movieId,$personId){
+        try{
+            return DB::select('select * from movie_people where movie_id = ', [$movieId],'AND person_id=',[$personId]);
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+        
+    }
 
+    public function movieQuery($query){
+        try{
+            return $query->get();
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+    public function update($request): void
+    {
+        try{
+            $movie = Movie::find($request['movie_id']);
+            $movie->price= $request['price'];
+            $movie->save();
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+        
+    }
+
+    public function getImage($movie){
+
+
+        $img = Media::find($movie->media_id);
+        $contents = Storage::get($img->path)->first();
+        dd($content);
+
+    }
 }

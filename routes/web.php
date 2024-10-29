@@ -33,10 +33,19 @@ Route::middleware(AdminMiddleware::class)->group(function () {
    
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard',[AdminController::class,'index'])->name('dashboard');
+
+        //get data form api
         Route::get('/get_movies',[ApiController::class,'getMovies'])->name('get_movies');
         Route::get('/get_genres',[ApiController::class,'getGenres'])->name('get_genres');
+        Route::get('/add_genres',[ApiController::class,'addGenres'])->name('add_genres');
         Route::get('/get_people/{movieId}',[ApiController::class,'getPeople'])->name('get_people');
         Route::get('/delete_data',[ApiController::class,'deleteDatabaseData'])->name('delete_data');
+
+        Route::get('/movie',[AdminController::class,'movies'])->name('movie');
+        Route::post('/movie/update',[AdminController::class,'movieUpdate'])->name('movie.update');
+        Route::delete('/movie/delete/{id}',[AdminController::class,'movieDelete'])->name('movie.delete');
+        Route::get('/movie/show/{id}',[AdminController::class,'movieShow'])->name('movie.show');
+
 
         // Route::get('/get_movies',[ApiController::class,'getMovies'])->name('get_movies');
         // Route::get('/get_genres',[ApiController::class,'getGenres'])->name('get_genres');

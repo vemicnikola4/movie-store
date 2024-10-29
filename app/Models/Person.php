@@ -11,6 +11,7 @@ class Person extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id',
         'name',
         'gender',
         'birthday_date',
