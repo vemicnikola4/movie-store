@@ -27,6 +27,6 @@ class GenreService
             $this->genreRepository->create($genre);
         }
     }
-
+  
 
 }

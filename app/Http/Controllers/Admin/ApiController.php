@@ -66,6 +66,12 @@ class ApiController extends Controller
         return inertia("Admin/Dashboard");
     }
 
+    public function addGenres(){
+        $this->movieService->addGenres();
+
+        return inertia("Admin/Dashboard");
+    }
+
 
 
 

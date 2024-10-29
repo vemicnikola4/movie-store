@@ -34,12 +34,9 @@ class MediaRepository implements MediaRepositoryInterface{
             $media->save();
             return $media;
             
-        } catch (QueryException $e) {
-            // Handle database-related exceptions
-            throw new MediaException('Database error while creating Media: ' . $e->getMessage());
         } catch (\Exception $e) {
             // Handle any other exceptions
-            throw new MediaException('An unexpected error occurred: ' . $e->getMessage());
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         } 
 
     }

@@ -27,41 +27,63 @@ class PeopleService{
 
     public function insertPeople( $movieId ) : void
     {
+        
+        //geting movie from DB
             $movie = $this->movieService->getOne($movieId);
 
+        //fetching movie people from api
             $credits = $this->apiService->fetchPeople($movie->api_id);
 
-            $castIds = [];
-            $crewIds = [];
+            
             foreach($credits['cast']as $cast){
-                if (!in_array($cast['id'],$castIds )){
-                    $castIds[]=$cast['id'];
-                    $person = $this->apiService->fetchPerson($cast['id']);
-                    $media = $this->mediaService->downloadImage($person['profile_path']);
-                
-                    $person['media_id'] = $media->id;
-                    $person['movie_id'] = $movie->id;
+
+                    $personExists = $this->personRepository->getOne($cast['id']);
+
+                    if ( !$personExists ){
+                        $person = $this->apiService->fetchPerson($cast['id']);
+
+                        $media = $this->mediaService->downloadImage($person['profile_path']);
                     
-                    $this->personRepository->create($person);
+                        $person['media_id'] = $media->id;
+                        $person['movie_id'] = $movie->id;
+                    
+                        
+                    
+                        $this->personRepository->create($person);
+
+                    }else{
+                        if ( !$this->personRepository->moviePersonExists($movieId,$cast['id'])){
+                            $this->personRepository->attachMovie($cast['id'],$movieId);
+
+                        }
+                    }
                     
                    
                     
-                }
-                
             }
+                
+            
 
 
             foreach($credits['crew']as $crew){
+                $personExists = $this->personRepository->getOne($crew['id']);
 
-                if (!in_array($crew['id'],$crewIds )){
-                    $crewIds[]=$crew['id'];
+                if ( !$personExists ){
                     $person = $this->apiService->fetchPerson($crew['id']);
+
                     $media = $this->mediaService->downloadImage($person['profile_path']);
-        
+            
                     $person['media_id'] = $media->id;
                     $person['movie_id'] = $movie->id;
-
+                
+                   
                     $this->personRepository->create($person);
+
+                }else{
+                    if ( !$this->personRepository->moviePersonExists($movieId,$crew['id']) ){
+                        $this->personRepository->attachMovie($crew['id'],$movieId);
+
+                    }
                 }
                 
             }
@@ -72,5 +94,5 @@ class PeopleService{
     {
         $this->personRepository->deleteAll();
     }
-
+    
 }
