@@ -57,18 +57,32 @@ class MovieService
         $movie = $this->movieRepository->getOne($id);
         $media = $this->mediaService->getOne($movie->media_id);
 
+        $movie['people']=$movie->people;
+        $movie['genres']=$movie->genres;
         $movie['image_path'] = asset('storage/'.$media->path);
+
+        foreach( $movie['people'] as $person ){
+            $media = $this->mediaService->getOne($person->media_id);
+
+            $person['image_path'] = asset('storage/'.$media->path);
+        }
 
         return $movie;
     }
 
-    public function addGenres(){
+    public function insertMovieGenres(){
 
-        $allMovies = $this->apiService->fetchMovies();
+        $allMovies = $this->allMovies();
 
-        foreach ( $allMovies as $movie ){
+        foreach ( $allMovies as $dbMovie ){
+            if(!$this->movieRepository->movieGenreExists($dbMovie->id)){
+                $apiMovie = $this->apiService->fetchOneMovie($dbMovie->api_id);
 
-            $this->movieRepository->addGenres($movie);
+                foreach($apiMovie['genres'] as $genre ){
+                    $this->movieRepository->addGenre($dbMovie,$genre);
+                }
+            }
+            
             
         }
 

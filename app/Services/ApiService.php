@@ -150,6 +150,29 @@ class ApiService
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    public function fetchOneMovie($apiId){
+        try {       
+            // Fetch the popular genres
+            $response = $this->client->request('GET', 'https://api.themoviedb.org/3/movie/'.$apiId, [
+                'query' => [
+                    'api_key' => $this-> apiKey,
+                ],
+            ]);
+        
+            if ($response->getStatusCode() === 200) {
+                $movie = json_decode($response->getBody(), true);
+                return $movie;
+            } else {
+                return response()->json(['error' => 'Request failed on page ' . $page], $response->getStatusCode());
+            }
+                    
+            
+        // return response()->json($allMovies);
+    } catch (\Exception $e) {
+
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+    }
 
     
 }

@@ -45,6 +45,7 @@ Route::middleware(AdminMiddleware::class)->group(function () {
         Route::post('/movie/update',[AdminController::class,'movieUpdate'])->name('movie.update');
         Route::delete('/movie/delete/{id}',[AdminController::class,'movieDelete'])->name('movie.delete');
         Route::get('/movie/show/{id}',[AdminController::class,'movieShow'])->name('movie.show');
+        Route::get('/movie/genres/create',[AdminController::class,'insertMovieGenres'])->name('movie.genres.create');
 
 
         // Route::get('/get_movies',[ApiController::class,'getMovies'])->name('get_movies');

@@ -47,12 +47,15 @@ class AdminController extends Controller
     {
         // $this->movieService->deleteMovie($id);
         $movie = $this->movieService->getOne($id);
-    dd($movie);
 
-        // return Inertia::render('Admin/Movies/Index', [
-        //     'movie' => $movie,
-        //     'successMessage'=>'Movie Deleted Successfuly',
-        // ]);
+        return Inertia::render('Admin/Movies/Movie', [
+            'movie' => $movie,
+        ]);
+    }
+
+    public function insertMovieGenres(){
+
+        $this->movieService->insertMovieGenres();
     }
 
 

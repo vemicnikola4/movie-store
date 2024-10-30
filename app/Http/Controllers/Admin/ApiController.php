@@ -17,8 +17,8 @@ use App\Services\GenreService;
 
 class ApiController extends Controller
 {
-    protected $movieService;
-    protected $peopleService;
+    // protected $movieService;
+    // protected $peopleService;
 
     public function __construct(MovieService $movieService,PeopleService $peopleService,GenreService $genreService)
     {

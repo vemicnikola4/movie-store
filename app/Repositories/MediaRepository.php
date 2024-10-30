@@ -13,17 +13,6 @@ class MediaRepository implements MediaRepositoryInterface{
         protected Media $model
     ){}
 
-    public function getOne($id) : Media 
-    {
-        return Media::find($id);
-    }
-
-    public function getOneWithPath($path) : ?Media 
-    {
-        return Media::where('path',$path)->first();
-    }
-
-
     public function create( array $data) : Media
     {
         try {
@@ -39,5 +28,15 @@ class MediaRepository implements MediaRepositoryInterface{
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         } 
 
+    }
+
+    public function getOne($id) : Media 
+    {
+        return Media::find($id);
+    }
+
+    public function getOneWithPath($path) : ?Media 
+    {
+        return Media::where('path',$path)->first();
     }
 }

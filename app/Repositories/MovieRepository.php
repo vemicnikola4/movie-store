@@ -8,6 +8,7 @@ use App\Models\Genre;
 use Illuminate\Database\QueryException;
 use App\Exceptions\MovieException;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 
 class MovieRepository implements MovieRepositoryInterface{
@@ -61,10 +62,9 @@ class MovieRepository implements MovieRepositoryInterface{
         return Movie::find($id);
     }
         
-    public function addGenres($movie){
+    public function addGenre($movie,$genre){
         try{
-            $dbMovie = Movie::where('api_id',$movie['id'])->first();
-            $dbMovie->genres()->attach($movie['genre_ids']);
+            $movie->genres()->attach($genre['id']);
         }catch(\Exception $e){
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         }
@@ -105,5 +105,24 @@ class MovieRepository implements MovieRepositoryInterface{
         $contents = Storage::get($img->path)->first();
         dd($content);
 
+    }
+
+    public function apiMovieExists($movieApiId) : ?Movie
+    {
+        return Movie::where('api_id',$movieApiId)->first();
+    }
+    public function movieGenreExists ($movieId) : Bool
+    {
+        try{
+            $movie = DB::select('select * from movie_genres where movie_id = '.$movieId.' limit 1');
+            if ( $movie ){
+
+                return true;
+            }else{
+                return false;
+            }
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
     }
 }

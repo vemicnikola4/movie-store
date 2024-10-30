@@ -141,7 +141,6 @@ const Index = ({ movies, queryParams,successMessage}) => {
         }
 
     }
-    
     return <>
         <AuthenticatedLayout
             header={
