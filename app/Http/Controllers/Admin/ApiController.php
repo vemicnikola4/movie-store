@@ -30,7 +30,7 @@ class ApiController extends Controller
     public function getMoviesFromApi(){
 
 
-        $this->movieService->deleteMovies();
+        // $this->movieService->deleteMovies();
         
         $this->movieService->insertMovies();
 

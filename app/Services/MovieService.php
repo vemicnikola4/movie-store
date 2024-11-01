@@ -77,6 +77,7 @@ class MovieService
     }
         
     public function insertOneMovie(array $movie){
+        
         $media = $this->mediaService->downloadImage($movie['poster_path']);
         $movie['media_id'] = $media->id;
         

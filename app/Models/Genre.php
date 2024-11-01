@@ -9,10 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Genre extends Model
 {
     use HasFactory;
-<<<<<<< HEAD
-=======
-
->>>>>>> fetching-movies-from-api
     protected $fillable = [
         'id',
         'name',
