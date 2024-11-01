@@ -33,7 +33,7 @@ Route::middleware(AdminMiddleware::class)->group(function () {
    
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard',[AdminController::class,'index'])->name('dashboard');
-        Route::get('/get_movies',[ApiController::class,'getMovies'])->name('get_movies');
+        Route::get('/get_movies',[ApiController::class,'getMoviesFromApi'])->name('get_movies');
 
         // Route::get('/get_movies',[ApiController::class,'getMovies'])->name('get_movies');
         // Route::get('/get_genres',[ApiController::class,'getGenres'])->name('get_genres');

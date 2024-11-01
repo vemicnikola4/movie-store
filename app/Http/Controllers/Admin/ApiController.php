@@ -25,17 +25,9 @@ class ApiController extends Controller
         $this->peopleService = $peopleService;
     }
 
-    public function getMovies(){
+    public function getMoviesFromApi(){
 
-
-        $this->movieService->deleteMovies();
         $this->movieService->insertMovies();
-
-        // $allMovies = Movie::all();
-
-        // foreach($allMovies as $movie){
-        //     $this->peopleService->insertPeople($movie, $movie['api_id']);
-        // }
 
     }
  

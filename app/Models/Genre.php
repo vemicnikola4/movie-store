@@ -10,6 +10,10 @@ class Genre extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'id',
+        'name',
+    ];
     /**
      * The roles that belong to the Genre
      *
