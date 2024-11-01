@@ -25,7 +25,7 @@ class ApiService
     public function fetchMovies() : array
     {
         $allMovies=[];
-        $totalPages = 1;
+        $totalPages = 3;
         try {
             for ($page = 1; $page <= $totalPages; $page++) {
                 // Fetch the popular movies for each page
@@ -47,6 +47,30 @@ class ApiService
             }
         
             return $allMovies;
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    public function fetchMovie($movieId):array
+    {
+        try {
+            $response = $this->client->request('GET', 'https://api.themoviedb.org/3/movie/'.$movieId, [
+                'query' => [
+                    'api_key' => $this->apiKey,
+                ],
+            ]);
+    
+                if ($response->getStatusCode() === 200) {
+                    $data = json_decode($response->getBody(), true);
+
+                    return $data;
+                } else {
+
+                    return response()->json(['error' => 'Image download failed'], $response->getStatusCode());
+                }
+                
+        
+            
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

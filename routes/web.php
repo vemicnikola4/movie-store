@@ -33,6 +33,7 @@ Route::middleware(AdminMiddleware::class)->group(function () {
    
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard',[AdminController::class,'index'])->name('dashboard');
+<<<<<<< HEAD
 
         //get data form api
         Route::get('/get_movies',[ApiController::class,'getMovies'])->name('get_movies');
@@ -47,6 +48,9 @@ Route::middleware(AdminMiddleware::class)->group(function () {
         Route::get('/movie/show/{id}',[AdminController::class,'movieShow'])->name('movie.show');
         Route::get('/movie/genres/create',[AdminController::class,'insertMovieGenres'])->name('movie.genres.create');
 
+=======
+        Route::get('/get_movies',[ApiController::class,'getMoviesFromApi'])->name('get_movies');
+>>>>>>> fetching-movies-from-api
 
         // Route::get('/get_movies',[ApiController::class,'getMovies'])->name('get_movies');
         // Route::get('/get_genres',[ApiController::class,'getGenres'])->name('get_genres');

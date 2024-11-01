@@ -38,4 +38,14 @@ class GenreRepository
 
     }
 
+    public function genreExists($id) : ?Genre
+    {
+        try {
+            return Genre::find($id);
+      
+        } catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
 }
