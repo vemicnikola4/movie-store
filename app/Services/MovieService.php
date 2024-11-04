@@ -35,6 +35,7 @@ class MovieService
         $fetchedMovies = $this->apiService->fetchMovies(); // Call the apiService method
 
         foreach ( $fetchedMovies as $movie ){
+
             $fetchedMovie = $this->apiService->fetchMovie($movie['id']);
 
             $movieExists = $this->movieRepository->movieExists(['api_id'=>$fetchedMovie['id']]);
@@ -124,13 +125,13 @@ class MovieService
         }
 
     }
-    public function allMovies(){
+    public function getAll(){
 
         return $this->movieRepository->getAll();
     }
 
-    public function adminGetMovies($request)
-    {
+    public function adminGetMovies(Request $request)
+    { 
         $query = Movie::query();
 
         if ( $request['sort_by_release_date'] ){
@@ -150,7 +151,13 @@ class MovieService
         {
             $query->where('price', '=', $request['price']);
         }
+        if($request['discounted'] )
+        {
+            if ( $request['discounted'] == 'only_discounted' ){
+                $query->where('discount', '!=', null );
 
+            }
+        }
 
         // $movies = $query->get();
         $movies = $this->movieRepository->movieQuery($query);
@@ -169,12 +176,21 @@ class MovieService
         
 
     }
-    public function adminUpdateMovie($request) : void 
+    public function adminUpdateMovie(Request $data) : void 
     {
-        $this->movieRepository->update($request);
+        if ( is_array($data['movie_id'])){
+            $this->movieRepository->massUpdateDiscount($data);
+
+        }else{
+            $this->movieRepository->update($data);
+
+        }
+
        
 
     }
+   
+    
     
 
 
