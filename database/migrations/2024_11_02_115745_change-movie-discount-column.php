@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('movies', function (Blueprint $table) {
-            $table->unique('api_id')->change();
-            $table->float('price')->required()->change();
-            $table->integer('discount')->nullable();
+            $table->integer('discount')->default(0)->change();
+
         });
     }
 

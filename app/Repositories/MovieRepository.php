@@ -7,6 +7,7 @@ use App\Models\Media;
 use App\Models\Genre;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class MovieRepository implements MovieRepositoryInterface{
 
@@ -36,6 +37,28 @@ class MovieRepository implements MovieRepositoryInterface{
        
 
     }
+    public function update( $data ) :void
+    {
+        try{
+            Movie::where('id', $data['movie_id'])->update([
+                'price' => $data['price'],
+                'discount' => $data['discount'],
+            ]);
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+    public function massUpdateDiscount( $data ) :void
+    {
+        try{
+            Movie::whereIn('id', $data['movie_id'])->update([
+                'discount' => $data['discount']
+            ]);
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+   
     public function deleteAll():void
     {
         try {
@@ -51,14 +74,15 @@ class MovieRepository implements MovieRepositoryInterface{
     public function getAll(): Collection
     {
         try{
-           
-            return Movie::all();
+            return Movie::paginate(10);
         }catch(\Exception $e){
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         }
         
     }
-    public function getOne($id) : MoWvie
+
+
+    public function getOne($id) : Movie
     {
         return Movie::find($id);
     }
@@ -101,6 +125,15 @@ class MovieRepository implements MovieRepositoryInterface{
         $genreId = $genre['id'];
         try{
             return DB::select('select * from movie_genres where movie_id = '.$movieId.' AND genre_id = '.$genreId);
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+
+    public function movieQuery($query)
+    {
+        try{
+            return $movie = $query->paginate(10);
         }catch(\Exception $e){
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         }
