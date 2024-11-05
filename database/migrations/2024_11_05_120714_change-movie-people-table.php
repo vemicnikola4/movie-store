@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('movies', function (Blueprint $table) {
-            $table->integer('discount')->default(0)->change();
-
+        Schema::table('movie_people', function (Blueprint $table) {
+            $table->string('job', 100)->nullable();
         });
     }
 
@@ -22,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('movies', function (Blueprint $table) {
+        Schema::table('movie_people', function (Blueprint $table) {
             //
         });
     }

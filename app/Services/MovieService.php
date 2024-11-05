@@ -190,6 +190,10 @@ class MovieService
 
     }
    
+    public function movieExists( array $data ) : ?Movie
+    {
+        return $this->movieRepository->movieExists( $data );
+    }
     
     
 
