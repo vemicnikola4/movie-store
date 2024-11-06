@@ -426,9 +426,13 @@ const Index = ({ paginator, queryParams, successMessage }) => {
                                                     </td>
                                                     <td className="px-3 py-2">
                                                         <div className="grid xl:grid-cols-3 gap-1">
-                                                            <Link href={route('admin.get_people', movie.id)} className={"font-medium text-center text-blue-600 hover:underline mx-1 " + (movie.people.length > 0 ? " text-gray-600 cursor-default hover:no-underline " : "")}>
-                                                                Add people
+                                                            {
+                                                                movie.crew.length <= 0 && movie.cast.length <= 0 &&
+                                                                <Link href={route('admin.get_people', movie.id)} className={"font-medium text-center text-blue-600 hover:underline mx-1 " }>
+                                                                Import people
                                                             </Link>
+                                                            }
+                                                            
                                                         </div>
                                                         <div className="grid xl:grid-cols-3 gap-1">
                                                             <span className={"font-medium text-center text-red-600 hover:underline hover:cursor-pointer mx-1 "} onClick={e => onClickDeleteMovie(e, movie.id)}>

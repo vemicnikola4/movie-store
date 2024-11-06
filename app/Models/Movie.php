@@ -26,4 +26,12 @@ class Movie extends Model
     {
         return $this->belongsToMany(Person::class,'movie_people');
     }
+    public function cast(): BelongsToMany
+    {
+        return $this->belongsToMany(Person::class,'cast','movie_id','person_id');
+    }
+    public function crew(): BelongsToMany
+    {
+        return $this->belongsToMany(Person::class,'crew','movie_id','person_id');
+    }
 }

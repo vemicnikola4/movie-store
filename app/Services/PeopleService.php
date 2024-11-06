@@ -59,10 +59,7 @@ class PeopleService{
 
                             }
     
-                            // if ( !$this->personRepository->moviePersonExists($movieId,$newPerson->id)){
-                            //     $this->personRepository->attachMovie( $newPerson,$movieId);
-                            //     $this->personRepository->addCharacterToPivotTable($newPerson,$movieId,$cast['character']);
-                            // }
+                           
     
                         }else{
                             if ( !$this->personRepository->movieCastExists($movieId,$personExists->id )){
@@ -74,20 +71,12 @@ class PeopleService{
                                 }
 
                             }
-                            // if ( !$this->personRepository->moviePersonExists($movieId,$cast['id'])){
-                            //     $this->personRepository->attachMovie($personExists,$movieId);
-                            //     $this->personRepository->addCharacterToPivotTable($personExists,$movieId,$cast['character']);
-
-    
-                            // }
+                            
                         }
                         
                        
                         
                 }
-                    
-                
-    
     
                 foreach($credits['crew']as $crew){
                     $personExists = $this->personRepository->getOne($crew['id']);
@@ -98,7 +87,6 @@ class PeopleService{
                         $media = $this->mediaService->downloadImage($person['profile_path']);
                     
                         $person['media_id'] = $media->id;
-                        // $person['movie_id'] = $movie->id;
                     
                         
                     
@@ -114,11 +102,7 @@ class PeopleService{
                             }
 
                         }
-                        // if ( !$this->personRepository->moviePersonExists($movieId,$newPerson->id)){
-                        //     $this->personRepository->attachMovie( $newPerson,$movieId);
-                        //     $this->personRepository->addJobToPivotTable($newPerson,$movieId,$crew['job']);
-
-                        // }
+                       
 
                     }else{
                         
@@ -132,13 +116,7 @@ class PeopleService{
                             }
 
                         }
-                        // if ( !$this->personRepository->moviePersonExists($movieId,$crew['id'])){
-                        //     $this->personRepository->attachMovie($personExists,$movieId);
-                        //     $this->personRepository->addJobToPivotTable($personExists,$movieId,$crew['job']);
-
-
-
-                        // }
+                      
                     }
                     
                 }

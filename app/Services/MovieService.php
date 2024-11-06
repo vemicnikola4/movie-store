@@ -165,8 +165,10 @@ class MovieService
         
         
         foreach($movies as $movie){
+
+            $movie['cast'] = $this->movieRepository->movieCast($movie->id);
+            $movie['crew'] = $this->movieRepository->movieCrew($movie->id);
             
-            $movie['people']=$movie->people;
             $media = $this->mediaService->getOne($movie->media_id);
 
             $movie['image_path']= asset('storage/'.$media->path);
