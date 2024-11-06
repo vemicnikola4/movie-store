@@ -35,11 +35,12 @@ class ApiController extends Controller
         $this->movieService->insertMovies();
 
     }
-    public function getPeople($movieId){
+    public function getPeopleFromApi($movieId){
 
         set_time_limit(300);
 
         $this->peopleService->insertPeople($movieId);
+        return redirect()->route('admin.movie');
 
 
     } 

@@ -36,12 +36,11 @@ Route::middleware(AdminMiddleware::class)->group(function () {
         Route::get('/get_movies',[ApiController::class,'getMoviesFromApi'])->name('get_movies');
 
         
-        Route::get('/get_people',[ApiController::class,'getPeople'])->name('get_people');
+        Route::get('/get_people/{movieId}',[ApiController::class,'getPeopleFromApi'])->name('get_people');
 
 
         Route::get('/movie',[AdminController::class,'movies'])->name('movie');
         Route::post('/movie/update',[AdminController::class,'movieUpdate'])->name('movie.update');
-        Route::post('/movie/mass_update_discount',[AdminController::class,'massUpdateDiscount']);
     });
 });
 

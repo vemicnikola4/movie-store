@@ -11,10 +11,10 @@ class PersonRepository implements PersonRepositoryInterface{
         protected Person $model
     ){}
 
-    public function create(array $data)
+    public function create(array $data) : Person
     {
         try {
-            $dbPerson = Person::create([
+            return $dbPerson = Person::create([
                 'id'=>$data['id'],
                 'name'=>$data['name'],
                 'gender'=>$data['gender'],
@@ -25,7 +25,6 @@ class PersonRepository implements PersonRepositoryInterface{
                 'media_id'=>$data['media_id'],
             ]);
             
-            $this->attachMovie($data['id'],$data['movie_id']);
            
         } catch (\Exception $e) {
             // Handle any other exceptions
@@ -45,7 +44,7 @@ class PersonRepository implements PersonRepositoryInterface{
         } 
 
     }
-    public function getOne($id)
+    public function getOne(int $id) : ?Person
     {
         try {
             // Create a new person record
@@ -58,25 +57,154 @@ class PersonRepository implements PersonRepositoryInterface{
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         } 
     }
-    public function attachMovie($personId, $movieId){
+    public function attachMovie(object $person,int  $movieId) : void
+    {
         try{
-            $person = Person::find($personId);
-            if ( $person ){
-                $person->movies()->attach($movieId);
-            }
+            $person->movies()->attach($movieId);
         }catch (\Exception $e) {
             // Handle any other exceptions
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         } 
         
     }
-    public function moviePersonExists($movieId,$personId){
-        return DB::table('movie_people')
-        ->where([
-            ['movie_id', '=', $movieId],
-            ['person_id', '=', $personId],
-        ])
-        ->first();
+    public function moviePersonExists(int $movieId,int $personId) : ?object
+    {
+        
+        try{
+            return DB::table('movie_people')
+            ->where([
+                ['movie_id', '=', $movieId],
+                ['person_id', '=', $personId],
+            ])
+            ->first();
+        }catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        } 
+       
+    }
+
+    public function addCharacterToPivotTable(object $person,int $movieId, string $character ) : void
+    {
+        
+        try{
+            DB::table('movie_people')
+              ->where('movie_id', $movieId)->where('person_id',$person->id)
+              ->update(['character' => $character]);
+        }catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        } 
+       
+    }
+    public function addJobToPivotTable(object $person,int $movieId, string $job ) : void
+    {
+        
+        try{
+            DB::table('movie_people')
+              ->where('movie_id', $movieId)->where('person_id',$person->id)
+              ->update(['job' => $job]);
+        }catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        } 
+       
+    }
+    public function movieCastExists(int $movieId, int $personId ) : ?object
+    {
+        try{
+            return DB::table('cast')
+            ->where([
+                ['movie_id', '=', $movieId],
+                ['person_id', '=', $personId],
+            ])
+            ->first();
+        }catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+
+    }
+   
+    public function movieCastCharacterExists(int $movieId, int $personId, string $character ): ?object
+    {
+        try{
+            return DB::table('cast')
+            ->where([
+                ['movie_id', '=', $movieId],
+                ['person_id', '=', $personId],
+                ['character', '=', $character],
+            ])
+            ->first();
+        }catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+    public function createMovieCast(int $movieId, int $personId, string $character) : void 
+    {
+        try{
+            DB::table('cast')->insert([
+                'movie_id' => $movieId,
+                'person_id' => $personId,
+                'character' => $character,
+            ]);
+        }catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+        
+
+    }
+
+
+    //***crew check */
+    public function movieCrewExists(int $movieId, int $personId ) : ?object
+    {
+        try{
+            return DB::table('crew')
+            ->where([
+                ['movie_id', '=', $movieId],
+                ['person_id', '=', $personId],
+            ])
+            ->first();
+        }catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+
+    }
+
+    public function movieCrewJobExists(int $movieId, int $personId, string $job ): ?object
+    {
+        try{
+            return DB::table('crew')
+            ->where([
+                ['movie_id', '=', $movieId],
+                ['person_id', '=', $personId],
+                ['job', '=', $job],
+            ])
+            ->first();
+        }catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+
+    public function createMovieCrew(int $movieId, int $personId, string $job) : void 
+    {
+        try{
+            DB::table('crew')->insert([
+                'movie_id' => $movieId,
+                'person_id' => $personId,
+                'job' => $job,
+            ]);
+        }catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+        
+
     }
 
 

@@ -138,4 +138,21 @@ class MovieRepository implements MovieRepositoryInterface{
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         }
     }
+
+    public function movieCast(int $movieId) : ?array
+    {
+        try{
+            return DB::select('select * from cast where movie_id = '.$movieId.'');
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+    public function movieCrew(int $movieId) : ?array
+    {
+        try{
+            return DB::select('select * from crew where movie_id = '.$movieId.'');
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
 }
