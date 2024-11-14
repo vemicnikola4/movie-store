@@ -49,29 +49,10 @@ class PeopleService{
                             
                         
                             $newPerson = $this->personRepository->create($person);
-                            if ( !$this->personRepository->movieCastExists($movieId,$newPerson->id )){
-                                
-                                $this->personRepository->createMovieCast($movieId, $newPerson->id, $cast['character']);
-                            }else{
-                                if ( !$this->personRepository->movieCastCharacterExists($movieId,$newPerson->id,$cast['character'] )){
-                                    $this->personRepository->createMovieCast($movieId, $newPerson->id, $cast['character']);
-                                }
-
-                            }
+                            
     
                            
-    
-                        }else{
-                            if ( !$this->personRepository->movieCastExists($movieId,$personExists->id )){
-                                
-                                $this->personRepository->createMovieCast($movieId, $personExists->id, $cast['character']);
-                            }else{
-                                if ( !$this->personRepository->movieCastCharacterExists($movieId,$personExists->id,$cast['character'] )){
-                                    $this->personRepository->createMovieCast($movieId, $personExists->id, $cast['character']);
-                                }
 
-                            }
-                            
                         }
                         
                        
@@ -91,34 +72,14 @@ class PeopleService{
                         
                     
                         $newPerson = $this->personRepository->create($person);
+ 
 
-                        if ( !$this->personRepository->movieCrewExists($movieId,$newPerson->id )){
-                                
-                            $this->personRepository->createMovieCrew($movieId, $newPerson->id, $crew['job']);
-
-                        }else{
-                            if ( !$this->personRepository->movieCrewJobExists($movieId,$newPerson->id,$crew['job'] )){
-                                $this->personRepository->createMovieCrew($movieId, $newPerson->id, $crew['job']);
-                            }
-
-                        }
-                       
-
-                    }else{
-                        
-                        if ( !$this->personRepository->movieCrewExists($movieId,$personExists->id )){
-                                
-                            $this->personRepository->createMovieCrew($movieId, $personExists->id, $crew['job']);
-
-                        }else{
-                            if ( !$this->personRepository->movieCrewJobExists($movieId,$personExists->id,$crew['job'] )){
-                                $this->personRepository->createMovieCrew($movieId, $personExists->id, $crew['job']);
-                            }
-
-                        }
-                      
                     }
                     
+                }
+                $credits['movie_id'] = $movieExists->id;
+                if ( !$this->movieService->movieCreditsExists($movieExists->id)){
+                    $this->movieService->createMovieCredits($credits);
                 }
         }
             
@@ -128,6 +89,10 @@ class PeopleService{
     public function deletePeople() : void
     {
         $this->personRepository->deleteAll();
+    }
+    public function getOnePerson( $id ) : ?Person
+    {
+        return $this->personRepository->getOne( $id );
     }
     
 }

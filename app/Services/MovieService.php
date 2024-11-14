@@ -15,21 +15,30 @@ use App\Repositories\MovieRepository;
 use App\Services\ApiService;
 use App\Services\GenreService;
 use App\Services\MediaService;
+use App\Services\PeopleService;
 
 
 
 class MovieService
 {
     
+    protected $peopleService;
 
-    public function __construct(ApiService $apiService,MediaService $mediaService,MovieRepositoryInterface  $movieRepository,GenreService $genreService)
+    public function __construct(ApiService $apiService,MediaService $mediaService,MovieRepository  $movieRepository,GenreService $genreService)
     {
         $this->apiService = $apiService;
         $this->mediaService = $mediaService;
         $this->genreService = $genreService;
         $this->movieRepository = $movieRepository;
     }
-    
+    public function getPeopleService(){
+        if (!$this->peopleService) {
+            $this->peopleService = app(PeopleService::class);
+        }
+        return $this->peopleService;
+    }
+
+
     public function insertMovies()
     {
         $fetchedMovies = $this->apiService->fetchMovies(); // Call the apiService method
@@ -166,8 +175,7 @@ class MovieService
         
         foreach($movies as $movie){
 
-            $movie['cast'] = $this->movieRepository->movieCast($movie->id);
-            $movie['crew'] = $this->movieRepository->movieCrew($movie->id);
+            $movie['credits'] = $this->movieRepository->credits($movie->id);
             
             $media = $this->mediaService->getOne($movie->media_id);
 
@@ -195,6 +203,53 @@ class MovieService
     public function movieExists( array $data ) : ?Movie
     {
         return $this->movieRepository->movieExists( $data );
+    }
+
+    public function showMovie($id) : Movie 
+    {
+        $peopleService = app(PeopleService::class);
+
+        $movie = $this->movieRepository->getOne($id);
+        $media = $this->mediaService->getOne($movie->media_id);
+        $credits =  $this->movieRepository->credits($movie->id);
+
+        $movie['genres']=$movie->genres;
+        $movie['image_path'] = asset('storage/'.$media->path);
+
+        $movieCast = json_decode($credits[0]->cast);
+        $movieCrew = json_decode($credits[0]->crew);
+        foreach( $movieCast as $cast ){
+            $person = $peopleService->getOnePerson($cast->id);
+
+            $media = $this->mediaService->getOne($person->media_id);
+
+            $person['image_path'] = asset('storage/'.$media->path);
+            $person['character'] =$cast->character;
+            $castArr[]= $person;
+        }
+        foreach($movieCrew as $crew ){
+            $person =  $peopleService->getOnePerson($crew->id);
+
+            $media = $this->mediaService->getOne($person->media_id);
+
+            $person['image_path'] = asset('storage/'.$media->path);
+            $person['job'] =$crew->job;
+
+            $crewArr[] = $person;
+
+
+        }
+        $movie['crew'] = $crewArr;
+        $movie['cast'] = $castArr;
+        return $movie;
+    }
+    public function movieCreditsExists(int $movieId) : array
+    { 
+        return $this->movieRepository->creditsExists( $movieId);
+    }
+    public function createMovieCredits($credits) : void
+    {
+        $this->movieRepository->createCredits($credits);
     }
     
     

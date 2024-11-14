@@ -26,11 +26,7 @@ const Movie = ({movie})=>{
         },
       ];
 
-    const cast = [];
-
-    movie.people.map((person)=>{
-        (person.known_for_department == 'Acting' ? cast.push(person) : null);
-    })
+    
     console.log(movie)
     return <>
     <AuthenticatedLayout
@@ -79,7 +75,7 @@ const Movie = ({movie})=>{
             <h1 className="text-2xl font-bold">Cast</h1>
 
             <div className="flex overflow-x-auto space-x-4 p-4">
-            {cast.map((person, index) => (
+            {movie.cast.map((person, index) => (
                 
                     (index < 11 ? 
                     <div key={index} className="min-w-[200px] bg-white rounded-lg shadow-md overflow-hidden">
@@ -90,6 +86,7 @@ const Movie = ({movie})=>{
                         />
                         <div className="p-4">
                             <h3 className="font-semibold">{person.name}</h3>
+                            <p className="font-semibold">{person.character}</p>
                         </div>
 
                     </div> : null)

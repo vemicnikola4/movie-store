@@ -9,6 +9,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
+
 class MovieRepository implements MovieRepositoryInterface{
 
     public function __construct(
@@ -88,14 +89,7 @@ class MovieRepository implements MovieRepositoryInterface{
     }
         
     
-    public function moviePersonExists($movieId,$personId){
-        try{
-            return DB::select('select * from movie_people where movie_id = ', [$movieId],'AND person_id=',[$personId]);
-        }catch(\Exception $e){
-            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
-        }
-        
-    }
+ 
 
     public function movieExists(array $data) : ?Movie
     {
@@ -130,7 +124,8 @@ class MovieRepository implements MovieRepositoryInterface{
         }
     }
 
-    public function movieQuery($query)
+    public function movieQuery($query) 
+ 
     {
         try{
             return $movie = $query->paginate(10);
@@ -139,20 +134,46 @@ class MovieRepository implements MovieRepositoryInterface{
         }
     }
 
-    public function movieCast(int $movieId) : ?array
+   public function moviePerson(int $perosnId) : ? array
+   {
+       try{
+           return DB::select('select * from people where id = '.$perosnId.'  LIMIT 1');
+       }catch(\Exception $e){
+           throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+       }
+   }
+
+    public function creditsExists(int $movieId) : ? array
     {
         try{
-            return DB::select('select * from cast where movie_id = '.$movieId.'');
+            return DB::select('select * from credits where movie_id = '.$movieId.'');
         }catch(\Exception $e){
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         }
     }
-    public function movieCrew(int $movieId) : ?array
+
+    public function createCredits(array $credits) : void
+    {
+        try {
+            DB::table('credits')->insert([
+                'movie_id' => $credits['movie_id'],
+                'cast' => json_encode($credits['cast']),
+                'crew' => json_encode($credits['crew'])
+            ]);
+        }catch (\Exception $e) {
+           //Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        } 
+    }
+    
+    public function credits(int $movieId) : ? array
     {
         try{
-            return DB::select('select * from crew where movie_id = '.$movieId.'');
+            return DB::select('select * from credits where movie_id = '.$movieId.' LIMIT 1');
         }catch(\Exception $e){
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         }
     }
 }
+
+
