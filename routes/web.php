@@ -29,9 +29,10 @@ Route::get('/',function(){
 // });
 
 
-Route::middleware(AdminMiddleware::class)->group(function () {
-   
+
     Route::prefix('admin')->name('admin.')->group(function () {
+
+       
         Route::get('/dashboard',[AdminController::class,'index'])->name('dashboard');
         Route::get('/get_movies',[ApiController::class,'getMoviesFromApi'])->name('get_movies');
 
@@ -40,11 +41,15 @@ Route::middleware(AdminMiddleware::class)->group(function () {
 
 
         Route::get('/movie',[AdminController::class,'movies'])->name('movie');
+        Route::get('/movie/show/{movieId}',[AdminController::class,'movieShow'])->name('movie.show');
         Route::post('/movie/update',[AdminController::class,'movieUpdate'])->name('movie.update');
-    });
-});
+    })->middleware(['auth', 'verified']);
 
 Route::get('/dashboard', function () {
+    
+    return Inertia::render('Dashboard');
+
+
     if (Auth::check() && Auth::user()->is_admin  == 1){
         return  redirect('admin/dashboard');
     }else{

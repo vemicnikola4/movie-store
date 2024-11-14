@@ -427,7 +427,7 @@ const Index = ({ paginator, queryParams, successMessage }) => {
                                                     <td className="px-3 py-2">
                                                         <div className="grid xl:grid-cols-3 gap-1">
                                                             {
-                                                                movie.crew.length <= 0 && movie.cast.length <= 0 &&
+                                                                movie.credits.length <= 0 &&
                                                                 <Link href={route('admin.get_people', movie.id)} className={"font-medium text-center text-blue-600 hover:underline mx-1 " }>
                                                                 Import people
                                                             </Link>

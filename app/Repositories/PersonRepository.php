@@ -110,6 +110,10 @@ class PersonRepository implements PersonRepositoryInterface{
         } 
        
     }
+
+
+    
+    //*** Cast check*/
     public function movieCastExists(int $movieId, int $personId ) : ?object
     {
         try{
@@ -148,6 +152,7 @@ class PersonRepository implements PersonRepositoryInterface{
                 'movie_id' => $movieId,
                 'person_id' => $personId,
                 'character' => $character,
+                'created_at' => now(),
             ]);
         }catch (\Exception $e) {
             // Handle any other exceptions
@@ -198,6 +203,8 @@ class PersonRepository implements PersonRepositoryInterface{
                 'movie_id' => $movieId,
                 'person_id' => $personId,
                 'job' => $job,
+                'created_at' => now(),
+
             ]);
         }catch (\Exception $e) {
             // Handle any other exceptions
@@ -206,6 +213,7 @@ class PersonRepository implements PersonRepositoryInterface{
         
 
     }
+    //*** */
 
 
 }
