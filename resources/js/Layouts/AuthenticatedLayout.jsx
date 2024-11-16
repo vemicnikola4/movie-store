@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
-
+    console.log(user);
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
@@ -17,16 +17,14 @@ export default function AuthenticatedLayout({ header, children }) {
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
-                            <div className="flex shrink-0 items-center">
-                                <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                                </Link>
-                            </div>
+                           
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                               
                                 <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
+                                    href={user.is_admin == 1 ? 
+                                        route('admin.dashboard') : route('dashboard')}
+                                    active={user.is_admin == 1 ? route().current('admin.dashboard'): route().current('dashboard')}
                                 >
                                     Dashboard
                                 </NavLink>
@@ -37,6 +35,14 @@ export default function AuthenticatedLayout({ header, children }) {
                                     active={route().current('admin.movie')}
                                 >
                                     Movies
+                                </NavLink>
+                            </div>
+                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink
+                                    href={route('admin.user')}
+                                    active={route().current('admin.user')}
+                                >
+                                    Users
                                 </NavLink>
                             </div>
                         </div>

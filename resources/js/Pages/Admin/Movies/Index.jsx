@@ -293,7 +293,7 @@ const Index = ({ paginator, queryParams, successMessage }) => {
         console.log(movies);
 
     }
-    console.log(paginator);
+    
     return <>
         <AuthenticatedLayout>
             <div className="py-12">

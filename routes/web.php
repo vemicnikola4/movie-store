@@ -11,51 +11,55 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
 
-// Route::get('/', function () {
-//     return Inertia::render('Welcome', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
 
-Route::get('/',function(){
-    return redirect('/dashboard');
-    });
+// Route::get('/',function(){
+//     return redirect('/welcome');
+// })->middleware(AdminMiddleware::class);
 
 // Route::middleware(['auth', 'verified'])->group(function () {
 //     Route::get('/dashboard',fn()=> Inertia::render('Dashboard'))->name('dashboard');
 // });
 
-
-
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['auth', 'verified',AdminMiddleware::class])->group(function () {
+        Route::prefix('admin')->name('admin.')->group(function () {
 
        
-        Route::get('/dashboard',[AdminController::class,'index'])->name('dashboard');
-        Route::get('/get_movies',[ApiController::class,'getMoviesFromApi'])->name('get_movies');
+            Route::get('/dashboard',[AdminController::class,'index'])->name('dashboard');
 
-        
-        Route::get('/get_people/{movieId}',[ApiController::class,'getPeopleFromApi'])->name('get_people');
-
-
-        Route::get('/movie',[AdminController::class,'movies'])->name('movie');
-        Route::get('/movie/show/{movieId}',[AdminController::class,'movieShow'])->name('movie.show');
-        Route::post('/movie/update',[AdminController::class,'movieUpdate'])->name('movie.update');
-    })->middleware(['auth', 'verified']);
-
-Route::get('/dashboard', function () {
+            //get data from public api
+            Route::get('/get_movies',[ApiController::class,'getMoviesFromApi'])->name('get_movies');
+            Route::get('/get_people/{movieId}',[ApiController::class,'getPeopleFromApi'])->name('get_people');
     
-    return Inertia::render('Dashboard');
+            //admin movie routes
+            Route::get('/movie',[AdminController::class,'movies'])->name('movie');
+            Route::get('/movie/show/{movieId}',[AdminController::class,'movieShow'])->name('movie.show');
+            Route::post('/movie/update',[AdminController::class,'movieUpdate'])->name('movie.update');
+    
+            //admin users routes
+            Route::get('/user',[AdminController::class,'users'])->name('user');
+    
+            
+        });
+    });
 
 
-    if (Auth::check() && Auth::user()->is_admin  == 1){
-        return  redirect('admin/dashboard');
-    }else{
+    Route::get('/dashboard', function () {
+        if (Auth::check() && Auth::user()->is_admin == 1) {
+            return redirect()->route('admin.dashboard');
+
+
+        }
         return Inertia::render('Dashboard');
-    }
-})->middleware(['auth', 'verified'])->name('dashboard');
+        
+    })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
