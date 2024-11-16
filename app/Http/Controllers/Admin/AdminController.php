@@ -6,13 +6,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 // use GuzzleHttp\Client;
 use App\Services\MovieService;
+use App\Services\UserService;
 
 
 class AdminController extends Controller
 {
-    public function __construct(MovieService $movieService)
+    public function __construct(MovieService $movieService, UserService $userService)
     {
         $this->movieService = $movieService;
+        $this->userService = $userService;
        
     }
     public function index(){
@@ -45,6 +47,20 @@ class AdminController extends Controller
     public function movieUpdate( Request $data ){
         $this->movieService->adminUpdateMovie($data);
     }
+
+    public function users(Request $request){
+         
+        $users = $this->userService->adminGetUsers($request);
+        return inertia("Admin/Users/Index",[
+            'paginator'=>$users,
+            'queryParams'=>request()->query() ?: null,
+
+            
+            
+        ]);
+    }
+
+
  
 
     
