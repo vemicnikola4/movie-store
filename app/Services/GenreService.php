@@ -29,6 +29,18 @@ use App\Repositories\GenreRepository;
         {
             return $this->genreRepository->genreExists($id);
         }
+        public function getOne($id) 
+        {
+            return $this->genreRepository->genreExists($id);
+        }
+        public function getOneByName(string $name) 
+        {
+            return $this->genreRepository->getOneByName($name);
+        }
+        public function genreMovies( object $genre )
+        {
+            return $this->genreRepository->movies($genre);
+        }
 
     }
 

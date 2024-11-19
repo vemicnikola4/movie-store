@@ -3,9 +3,8 @@
 
 namespace App\Interfaces;
 
-interface MovieRepositoryInterface{
+interface MovieRepositoryInterface extends BaseInterface{
     
-    public function create(array $data);
     public function deleteAll();
     public function getAll();
     public function getOne($id);

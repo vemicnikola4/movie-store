@@ -5,15 +5,33 @@ namespace App\Http\Controllers;
 use App\Models\Movie;
 use App\Http\Requests\StoreMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
+use App\Services\MovieService;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+
+
+
 
 class MovieController extends Controller
 {
+    public function __construct(MovieService $movieService)
+    {
+        $this->movieService = $movieService;
+       
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $movies = $this->movieService->guestGetMovies($request);
+             return inertia('LandingPage', [
+            'queryParams'=>request()->query() ?: null,
+             'canLogin' => Route::has('login'),
+             'canRegister' => Route::has('register'),
+             'paginator' => $movies
+        
+         ]);
     }
 
     /**
@@ -37,7 +55,12 @@ class MovieController extends Controller
      */
     public function show(Movie $movie)
     {
-        //
+        $movie = $this->movieService->showMovie($movie->id);
+
+        return inertia("Movie",[
+            'movie'=>$movie,
+            
+        ]);
     }
 
     /**

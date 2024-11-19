@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ApiController;
+use App\Http\Controllers\MovieController;
 
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Foundation\Application;
@@ -11,14 +12,13 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+Route::middleware('guest')->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('movie.index');
+    });
 });
+
+Route::resource('movie', MovieController::class);
 
 // Route::get('/',function(){
 //     return redirect('/welcome');
@@ -29,6 +29,7 @@ Route::get('/', function () {
 // });
 
     Route::middleware(['auth', 'verified',AdminMiddleware::class])->group(function () {
+        
         Route::prefix('admin')->name('admin.')->group(function () {
 
        
@@ -54,8 +55,6 @@ Route::get('/', function () {
     Route::get('/dashboard', function () {
         if (Auth::check() && Auth::user()->is_admin == 1) {
             return redirect()->route('admin.dashboard');
-
-
         }
         return Inertia::render('Dashboard');
         

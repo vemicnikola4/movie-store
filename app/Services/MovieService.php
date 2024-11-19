@@ -16,6 +16,8 @@ use App\Services\ApiService;
 use App\Services\GenreService;
 use App\Services\MediaService;
 use App\Services\PeopleService;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 
 
 
@@ -136,13 +138,42 @@ class MovieService
     }
     public function getAll(){
 
-        return $this->movieRepository->getAll();
+        $movies =  $this->movieRepository->getAll();
+        foreach($movies as $movie){
+
+            $media = $this->mediaService->getOne($movie->media_id);
+            $genres = $movie->genres;
+            $movie['genres'] = $genres;
+            $movie['image_path']= asset('storage/'.$media->path);
+           
+        }
+        return $movies;
     }
 
     public function adminGetMovies(Request $request)
     { 
-        $query = Movie::query();
+        return $this->movieQuery($request);
+        
+        
 
+    }
+    public function guestGetMovies(Request $request)
+    { 
+        $data = $request->all();
+        if (count($data) > 0 ){
+            return $this->movieQuery($request);
+
+        }else{
+            return $this->getAll();
+        }
+        
+
+    }
+
+    public function movieQuery(Request $request) : ?LengthAwarePaginator
+    {
+        $query = Movie::query();
+        
         if ( $request['sort_by_release_date'] ){
             $query->orderBy('release_date',$request['sort_by_release_date']);
         }
@@ -167,23 +198,56 @@ class MovieService
 
             }
         }
+        if($request['release_date'] )
+        {
+            $dateStringStart = $request['release_date']."-1-1";
+            $dateStringEnd = $request['release_date']."-12-31";
+            $startDate= \DateTime::createFromFormat('Y-m-d', $dateStringStart);
+            $endDate = \DateTime::createFromFormat('Y-m-d', $dateStringEnd);
+            $query->whereBetween('release_date', [$startDate, $endDate]);
+        }
+
+
+        if ( $request['genre'])
+        {
+            $genre = $this->genreService->getOneByName($request['genre']);
+            
+            if ( $genre ){
+                $ids = [];
+                $movies = $this->genreService->genreMovies($genre);
+                foreach ($movies as $movie)
+                {
+                    $ids[]= $movie->id;
+                    
+                }
+                $query->whereIn('id',$ids);
+            }else{
+                
+                $request['genre'] = 'Error genre misspeled!';
+            }
+           
+
+        }
+
+        $movies = $this->movieRepository->movieQuery($query);
+
 
         // $movies = $query->get();
-        $movies = $this->movieRepository->movieQuery($query);
+        
 
         
         
         foreach($movies as $movie){
 
             $movie['credits'] = $this->movieRepository->credits($movie->id);
-            
             $media = $this->mediaService->getOne($movie->media_id);
+            $movie['genres']=$movie->genres;
+           
 
             $movie['image_path']= asset('storage/'.$media->path);
            
         }
         return $movies;
-        
 
     }
     public function adminUpdateMovie(Request $data) : void 
@@ -202,6 +266,7 @@ class MovieService
    
     public function movieExists( array $data ) : ?Movie
     {
+       
         return $this->movieRepository->movieExists( $data );
     }
 
