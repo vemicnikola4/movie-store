@@ -61,21 +61,7 @@ const Index = ({ paginator, queryParams, successMessage }) => {
         }
     }
 
-    if (queryParams.sort_by_release_date) {
-        sortedBy = 'Sorted by release date';
-        direction = queryParams.sort_by_release_date;
-    } else if (queryParams.sort_by_price) {
-        sortedBy = 'Sorted by price';
-        direction = queryParams.sort_by_price;
-
-
-    } else if (queryParams.sort_by_title) {
-        sortedBy = 'Sorted by title';
-        direction = queryParams.sort_by_title;
-    } else {
-        sortedBy = '';
-        direction = '';
-    }
+    
     const [selectedOption, setSelectedOption] = useState(
         ''
     )
@@ -244,13 +230,6 @@ const Index = ({ paginator, queryParams, successMessage }) => {
             })
         } 
     }
-
-    movies.forEach((movie) => {
-        if (movie.discount > 0) {
-            let discounted = movie.price - ((movie.price / 100) * movie.discount)
-            movie.discountedPrice = discounted.toFixed(1);
-        }
-    })
     const showDiscountedChecked = (e) => {
         if (queryParams.page) {
             delete queryParams.page;
@@ -265,6 +244,38 @@ const Index = ({ paginator, queryParams, successMessage }) => {
         }
         router.get(route("admin.movie", queryParams));
 
+    }
+    const massCheckClicked = (movieId, e) => {
+        movies.forEach((movie) => {
+            if (movie.id == movieId) {
+                movie.massChecked = e.target.checked;
+            }
+        })
+        console.log(movies);
+
+    }
+
+    movies.forEach((movie) => {
+        if (movie.discount > 0) {
+            let discounted = movie.price - ((movie.price / 100) * movie.discount)
+            movie.discountedPrice = discounted.toFixed(1);
+        }
+    })
+    
+    if (queryParams.sort_by_release_date) {
+        sortedBy = 'Sorted by release date';
+        direction = queryParams.sort_by_release_date;
+    } else if (queryParams.sort_by_price) {
+        sortedBy = 'Sorted by price';
+        direction = queryParams.sort_by_price;
+
+
+    } else if (queryParams.sort_by_title) {
+        sortedBy = 'Sorted by title';
+        direction = queryParams.sort_by_title;
+    } else {
+        sortedBy = '';
+        direction = '';
     }
     paginator.links.forEach((link) => {
         if (link.url) {
@@ -284,15 +295,7 @@ const Index = ({ paginator, queryParams, successMessage }) => {
         }
 
     });
-    const massCheckClicked = (movieId, e) => {
-        movies.forEach((movie) => {
-            if (movie.id == movieId) {
-                movie.massChecked = e.target.checked;
-            }
-        })
-        console.log(movies);
-
-    }
+   
     
     return <>
         <AuthenticatedLayout>

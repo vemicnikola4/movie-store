@@ -6,6 +6,7 @@ use App\Models\Movie;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 class MovieRepository implements MovieRepositoryInterface{
@@ -14,7 +15,10 @@ class MovieRepository implements MovieRepositoryInterface{
         protected Movie $model
     ){}
 
+    public function index()
+    {
 
+    }
     public function create(array $data) : Movie
     {
         $prices= [700,900,950,1000,1200,1500,1700];
@@ -36,6 +40,23 @@ class MovieRepository implements MovieRepositoryInterface{
        
 
     }
+    public function store(Request  $data)
+    {
+        
+    }
+    public function show(object $data)
+    {
+        
+    }
+    public function edit(object $data)
+    {
+        
+    }
+    public function destroy(object $data)
+    {
+        
+    }
+   
     public function update( $data ) :void
     {
         try{
@@ -73,7 +94,8 @@ class MovieRepository implements MovieRepositoryInterface{
     public function getAll(): Collection
     {
         try{
-            return Movie::paginate(10);
+
+            return Movie::all();
         }catch(\Exception $e){
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         }
@@ -126,7 +148,7 @@ class MovieRepository implements MovieRepositoryInterface{
  
     {
         try{
-            return $movie = $query->paginate(10);
+            return $movie = $query->paginate(15);
         }catch(\Exception $e){
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         }
@@ -172,6 +194,7 @@ class MovieRepository implements MovieRepositoryInterface{
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         }
     }
+   
 }
 
 
