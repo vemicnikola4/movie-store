@@ -1,9 +1,11 @@
 import TextInput from "./TextInput";
 import { useState } from "react";
-import { router } from "@inertiajs/react";
+import { router ,usePage} from "@inertiajs/react";
 
 
 const Hero = ({ queryParams }) => {
+  const user = usePage().props.auth.user;
+
   queryParams = queryParams || {};
   let sortedBy;
   let direction;
@@ -24,11 +26,15 @@ const Hero = ({ queryParams }) => {
     queryParams = {};
 
     queryParams[inputValue.searchBy] = inputValue.value;
+    if ( user ){
+      router.get(route("user.movie", queryParams));
 
-    router.get(route("movie.index", queryParams));
+    }else{
+      router.get(route("movie.index", queryParams));
+
+    }
   }
   const handleSelectChange = (event) => {
-    console.log(event.target.value);
 
     if (queryParams.page) {
       delete queryParams.page;
@@ -76,7 +82,13 @@ const Hero = ({ queryParams }) => {
         queryParams['sort_by_release_date'] = 'asc';
       }
     }
-    router.get(route("movie.index", queryParams));
+    if ( user ){
+      router.get(route("user.movie", queryParams));
+
+    }else{
+      router.get(route("movie.index", queryParams));
+
+    }
 
   }
   if (queryParams.sort_by_release_date) {

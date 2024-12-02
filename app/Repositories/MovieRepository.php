@@ -103,7 +103,7 @@ class MovieRepository implements MovieRepositoryInterface{
     }
 
 
-    public function getOne($id) : Movie
+    public function getOne($id) : ? Movie
     {
         return Movie::find($id);
     }

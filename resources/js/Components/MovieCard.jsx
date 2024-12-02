@@ -1,6 +1,11 @@
+import { usePage } from "@inertiajs/react";
 
+const MovieCard = ({ movie , addToCart}) => {
+  const user = usePage().props.auth.user;
 
-const MovieCard = ({ movie }) => {
+  const onAddToCartClick = (movieId)=>{
+    addToCart(movieId);
+  }
   let discounted;
     if (movie.discount > 0) {
       discounted = movie.price - ((movie.price / 100) * movie.discount)
@@ -40,7 +45,7 @@ const MovieCard = ({ movie }) => {
          movie.genres &&
           movie.genres.map((genre, ind)=> (
             <div key={ind}>
-<div className="hidden lg:block border p-1 text-align-middle rounded-full bg-gray-900 text-xs text-center text-white w-20">
+                <div className="hidden lg:block border p-1 text-align-middle rounded-full bg-gray-900 text-xs text-center text-white w-20">
               {genre.name}
             </div>
             </div>
@@ -54,7 +59,13 @@ const MovieCard = ({ movie }) => {
         </div>
         <div className="grid grid-cols-2 gap-4 absolute bottom-0 left-0 pt-3 bg-gradient-to-b from-gray-300 to-gray-500">
           <div className="p-1 ">
-              <button className="text-white p-2 bg bg-sky-800 text-sm rounded-lg hover:bg-sky-600">Add to cart</button>
+            {
+              user ? 
+              <button className="text-white p-2 bg bg-sky-800 text-sm rounded-lg hover:bg-sky-600" onClick={e=>(onAddToCartClick(movie.id))}>Add to cart</button>
+              :
+              <button className="text-white p-2 bg bg-sky-800 text-sm rounded-lg hover:bg-sky-600">
+                <a href="/user/movie">Add to cart</a></button>
+            }
             
           </div>
           <div className="text-red-700 font-extrabold ">

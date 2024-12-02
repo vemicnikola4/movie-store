@@ -157,6 +157,15 @@ class MovieService
         
 
     }
+    public function userGetMovies(Request $request){
+        $data = $request->all();
+        if (count($data) > 0 ){
+            return $this->movieQuery($request);
+
+        }else{
+            return $this->getAll();
+        }
+    }
     public function guestGetMovies(Request $request)
     { 
         $data = $request->all();
@@ -317,7 +326,16 @@ class MovieService
         $this->movieRepository->createCredits($credits);
     }
     
-    
+    public function getCart(Request $request)
+    {
+        $data = request()->all();
+        $movies = [];
+        foreach($data['movies'] as $id){
+            $movies[]=$this->movieRepository->getOne($id);
+        }
+
+        return $movies;
+    }
 
 
     

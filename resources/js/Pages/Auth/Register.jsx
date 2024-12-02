@@ -24,8 +24,9 @@ export default function Register() {
     return (
         <GuestLayout>
             <Head title="Register" />
-
-            <form onSubmit={submit}>
+            <div className='flex justify-center h-screen p-8' >
+                <div className='flex-initial w-96 bg-white  shadow sm:rounded-lg p-10 dark:bg-gray-800 mt-4 h-fit mt-4'>
+                <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
 
@@ -115,6 +116,10 @@ export default function Register() {
                     </PrimaryButton>
                 </div>
             </form>
+                </div>
+            </div> 
+
+           
         </GuestLayout>
     );
 }
