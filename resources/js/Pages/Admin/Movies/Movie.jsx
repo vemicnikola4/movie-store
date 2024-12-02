@@ -4,7 +4,6 @@ import { Head ,Link, router } from "@inertiajs/react";
 
 
 const Movie = ({movie})=>{
-
     const dummyReviews = [
         {
           author: "John Doe",

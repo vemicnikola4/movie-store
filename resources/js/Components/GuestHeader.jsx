@@ -1,5 +1,8 @@
 import { Link } from "@inertiajs/react";
-const GuestHeader = () => {
+const GuestHeader = ({cart}) => {
+
+
+    localStorage.clear();
     return (
         <header className=" flex justify-between items-center px-6 py-1 bg-gray-900 shadow-lg text-white">
             <h1 className="font-bold text-xl">Movie store</h1>
@@ -14,7 +17,8 @@ const GuestHeader = () => {
                         Movies
                     </Link>
                     <Link
-                        // href={route('login')}
+                        // href={route('cart',cart)}
+
                         className="hover:underline active:underline
                          p-2"
                     >
@@ -28,7 +32,7 @@ const GuestHeader = () => {
                 
                 </div>
                 <div className="grid-cols-2">
-                <Link
+                    <Link
                         href={route('login')}
                         className="rounded-md px-3 py-2 text-blue ring-1 ring-transparent transition hover:text-blue/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                     >

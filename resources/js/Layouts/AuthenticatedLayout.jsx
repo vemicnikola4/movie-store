@@ -5,9 +5,9 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
-export default function AuthenticatedLayout({ header, children }) {
+export default function AuthenticatedLayout({ header, children, cart}) {
     const user = usePage().props.auth.user;
-    console.log(user);
+   
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
@@ -30,20 +30,55 @@ export default function AuthenticatedLayout({ header, children }) {
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                {
+                                user.is_admin == 1 ?
                                 <NavLink
                                     href={route('admin.movie')}
                                     active={route().current('admin.movie')}
                                 >
                                     Movies
                                 </NavLink>
+                                 : 
+                                <NavLink
+                                    href={route('user.movie')}
+                                    active={route().current('user.movie')}
+                                >
+                                    Movies
+                                </NavLink>
+                                }
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                {
+                                user.is_admin == 1 ?
+                                
                                 <NavLink
                                     href={route('admin.user')}
                                     active={route().current('admin.user')}
                                 >
                                     Users
                                 </NavLink>
+                                :
+                                <NavLink
+                                    href={route('user.cart')}
+                                    active={route().current('user.cart')}
+                                >
+                                    Cart
+                                </NavLink>
+                                }
+                            </div>
+                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                {
+                                user.is_admin !== 1 ?
+                                
+                                <NavLink
+                                    href={route('user.carts', user.id)}
+                                    active={route().current('user.carts',user.id)}
+                                >
+                                    Purchasess
+                                </NavLink>
+                                :
+                                null
+                                }
                             </div>
                         </div>
 

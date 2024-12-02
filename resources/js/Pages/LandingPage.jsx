@@ -2,13 +2,18 @@ import GuestHeader from '@/Components/GuestHeader';
 import Hero from '@/Components/Hero';
 import MovieCard from '@/Components/Moviecard';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link , usePage} from '@inertiajs/react';
 import Pagination from '@/Components/Pagination';
 
 export default function LandingPage({ paginator, queryParams }) {
+    
     queryParams = queryParams || {};
     let moviesByGenres = false;
     let movies;
+    const [cart, addMovie] = [];
+    const onClickedAddToCart = (movieId)=>{
+        addMovie[movieId];
+    }
     const handleImageError = () => {
         document
             .getElementById('screenshot-container')
@@ -80,14 +85,15 @@ export default function LandingPage({ paginator, queryParams }) {
            
         })
     }
+
     
     
 
     return (
         <>
+            <GuestLayout>
             <Head title="Welcome" />
             <div className=" bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
-                <GuestHeader />
                 <Hero queryParams={queryParams} />
 
 
@@ -257,6 +263,8 @@ export default function LandingPage({ paginator, queryParams }) {
                 }
 
             </div>
+            </GuestLayout>
+           
         </>
 
 

@@ -33,8 +33,8 @@ const Movie = ({movie})=>{
         <GuestHeader />
         <div className="max-w-screen mx-auto p-4 overflow-hidden bg-gray-100">
 
-            <div className="grid grid-cols-3 gap-0 ">
-                <div className="w-96 ">
+            <div className="block lg:grid grid-cols-3 gap-0 p-3 px-6">
+                <div className="w-full  ">
 
                     <img
                     src={movie.image_path}
@@ -43,9 +43,13 @@ const Movie = ({movie})=>{
                     />
                 </div>
                 
-                <div className="md:ml-4 mt-4 md:mt-0 colspan-2 ">
-                    <div className="p-3">
+                <div className="md:ml-4 mt-4 md:mt-0 lg:colspan-2 ">
+                    <div className="">
                         <h1 className="text-3xl font-bold">{movie.title}</h1>
+                        <div className="my-2">
+                            <button className="text-white p-2 bg bg-sky-800 text-sm rounded-lg hover:bg-sky-600">Add to cart</button>
+                        </div>
+                        
                         <p className="text-gray-500">{movie.release_date}</p>
                     </div>
                     <div className="flex items-center mt-2">
@@ -54,11 +58,11 @@ const Movie = ({movie})=>{
                     </div>
                     
                     <h2 className="mt-4 text-xl font-semibold">Overview</h2>
-                    <p className="mt-2 text-gray-700">{movie.overview}</p>
+                    <div className="mt-2 text-gray-700">{movie.overview}</div>
                     <h3 className="mt-4 text-lg font-semibold">Genres</h3>
                     <div className="flex flex-wrap mt-2">
                         {movie.genres.map((genre, index) => (
-                        <span key={index} className="bg-blue-500 text-white rounded-full px-3 py-1 mr-2">
+                        <span key={index} className="bg-blue-500 text-white rounded-full px-3 py-1 m-1">
                             {genre.name}
                         </span>
                         ))}
