@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 
 class Cart extends Model
 {
@@ -15,4 +17,12 @@ class Cart extends Model
         'cart_total',
        
     ];
+   
+   
+    public function movies(): BelongsToMany
+    {
+        return $this->belongsToMany(Movie::class, 'ordered_items', 'cart_id', 'movie_id');
+    }
+   
+    
 }

@@ -14,6 +14,7 @@ const Cart = ({message, emptyCart,errors}) => {
         const cart = localStorage.getItem('cart');
         return cart ? JSON.parse(cart) : [] // Parse JSON if stored as a number
     });
+    console.log(cart);
     if ( emptyCart ){
         localStorage.removeItem('cart');
     }
@@ -124,15 +125,16 @@ const Cart = ({message, emptyCart,errors}) => {
           });
     }
     const storeCart = (cartTotal)=>{
-        let payload = {cart:undefined,total:undefined};
-        payload.cart = newCart;
+        let payload = {cart:undefined,total:undefined,jsonCart:undefined};
+        payload.cart = cart;
+        payload.jsonCart = newCart;
         payload.total = Number(cartTotal);
 
         localStorage.removeItem('cart');
 
         
         router.post('/user/cart/store', payload);
-        window.location.reload();
+       window.location.reload();
         
     }
     return <>

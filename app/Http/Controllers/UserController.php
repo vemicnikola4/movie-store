@@ -6,6 +6,8 @@ use App\Services\MovieService;
 use App\Services\CartService ;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class UserController extends Controller
 {
@@ -28,12 +30,17 @@ class UserController extends Controller
         return inertia('User/Movies/Cart');
     }
     public function dashboard (Request $request)
-    {
-        return inertia('User/Dashboard');
+    {   
+        $lastPurchasse = $this->cartService->lastCartForUser(Auth::user()->id);
+        $bestSelingMovies = $this->cartService->bestSelingMovies();
+        return inertia('User/Dashboard',[
+            'lastPurchasse'=> $lastPurchasse,
+            'bestSelingMovies'=>$bestSelingMovies
+        ]);
     }
     public function carts (Request $request)
     {
-        $carts = $this->cartService->getCarts($request);
+        $carts = $this->cartService->getUserCarts($request);
         return inertia('User/Carts/Index',[
             'carts'=>$carts,
         ]);

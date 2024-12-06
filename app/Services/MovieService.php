@@ -106,15 +106,15 @@ class MovieService
         $movie = $this->movieRepository->getOne($id);
         $media = $this->mediaService->getOne($movie->media_id);
 
-        $movie['people']=$movie->people;
+        // $movie['people']=$movie->people;
         $movie['genres']=$movie->genres;
         $movie['image_path'] = asset('storage/'.$media->path);
 
-        foreach( $movie['people'] as $person ){
-            $media = $this->mediaService->getOne($person->media_id);
+        // foreach( $movie['people'] as $person ){
+        //     $media = $this->mediaService->getOne($person->media_id);
 
-            $person['image_path'] = asset('storage/'.$media->path);
-        }
+        //     $person['image_path'] = asset('storage/'.$media->path);
+        // }
 
         return $movie;
     }
