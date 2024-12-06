@@ -34,4 +34,8 @@ class Movie extends Model
     {
         return $this->belongsToMany(Person::class,'crew','movie_id','person_id');
     }
+    public function carts(): BelongsToMany
+    {
+        return $this->belongsToMany(Cart::class,'ordered_items','movie_id','cart_id');
+    }
 }

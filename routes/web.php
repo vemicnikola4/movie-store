@@ -17,12 +17,21 @@ use Illuminate\Http\Request;
 
 
 Route::middleware('guest')->group(function () {
+    
     Route::get('/', function () {
         return redirect()->route('movie.index');
     });
+    Route::resource('movie', MovieController::class);
+
 });
 
-Route::resource('movie', MovieController::class);
+
+
+// Route::get('movie',function (){
+//     if (Auth::check()) {
+//         return redirect()->route('user.movie');
+//     }
+// });
 // Route::get('cart',function (Request $request) {
 //     return inertia("Cart",[
 //         'cart'=>$request['cart'],
@@ -61,6 +70,7 @@ Route::resource('movie', MovieController::class);
         });
     });
 
+   
 
     Route::get('/dashboard', function () {
         if (Auth::check() && Auth::user()->is_admin == 1) {
@@ -75,15 +85,18 @@ Route::resource('movie', MovieController::class);
     })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::prefix('user')->name('user.')->group(function () {
         Route::get('/movie',[UserController::class, 'movies'])->name('movie');
+        Route::get('/movie/show/{id}',[MovieController::class, 'show'])->name('movie.show');
         Route::get('/cart',[UserController::class, 'cart'])->name('cart');
         Route::post('/cart/store',[CartController::class, 'store'])->name('cart.store');
-        Route::get('/dashboard',[UserController::class, 'dashboard'])->name('dashboard');
+        Route::get('/cart/show/{id}',[CartController::class, 'show'])->name('cart.show');
+        Route::get('/dashboard/',[UserController::class, 'dashboard'])->name('dashboard');
         Route::get('/carts/{id}',[UserController::class, 'carts'])->name('carts');
     });
 });

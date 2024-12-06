@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateMovieRequest;
 use App\Services\MovieService;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 
 
@@ -53,14 +54,23 @@ class MovieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Movie $movie)
+    public function show(Request $request)
     {
-        $movie = $this->movieService->showMovie($movie->id);
 
-        return inertia("Movie",[
-            'movie'=>$movie,
-            
-        ]);
+        $movie = $this->movieService->showMovie($request['id']);
+        if ( Auth::check() ){
+            return inertia("User/Movies/Movie",[
+                'movie'=>$movie,
+                
+            ]);
+
+        }else{
+            return inertia("Movie",[
+                'movie'=>$movie,
+                
+            ]);
+        }
+       
     }
 
     /**

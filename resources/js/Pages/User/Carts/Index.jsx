@@ -71,7 +71,7 @@ export default function Index({carts,message}){
                                                         <div className="grid grid-cols-3 gap-1">
 
                                                             <div>
-                                                                <p className="text-green-700 font-bold hover:text-underlined">See detailes</p>
+                                                                <a href={`/user/cart/show/${cartItem.id}`}className="text-green-700 font-bold hover:text-underlined">See detailes</a>
 
                                                             </div>
                                                           

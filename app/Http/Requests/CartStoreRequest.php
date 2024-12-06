@@ -18,6 +18,8 @@ class CartStoreRequest extends FormRequest
     {
         return [
             'cart.required' => 'Your Cart is empty.',
+            'cart.array' => 'Something went wrong.',
+            'jsonCart.array' => 'Something went wrong.',
             'total.required' => 'Your Cart is empty.',
             'total.numeric' => 'Cart total must be numeric.',
         ];
@@ -32,6 +34,7 @@ class CartStoreRequest extends FormRequest
     {
         return [
             'cart'=> 'required|array|min:1',
+            'jsonCart'=> 'required|array|min:1',
             'total'=>'required|numeric',
 
         ];

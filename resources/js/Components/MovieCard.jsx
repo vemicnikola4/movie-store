@@ -25,7 +25,7 @@ const MovieCard = ({ movie , addToCart}) => {
       <div className="w-full p-3 ">
         <div className="grid grid-cols-2 gap-3">
           <h2 className="text-xl font-bold hover:underline hover:text-sky-800">
-            <a href={route('movie.show', movie.id)}>
+            <a href={user ? route('user.movie.show', movie.id) :  route('movie.show', movie.id)}>
               {movie.title}
             </a>
           </h2>
