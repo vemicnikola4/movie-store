@@ -7,6 +7,8 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Carbon\Carbon;
+
 
 
 class MovieRepository implements MovieRepositoryInterface{
@@ -15,10 +17,6 @@ class MovieRepository implements MovieRepositoryInterface{
         protected Movie $model
     ){}
 
-    public function index()
-    {
-
-    }
     public function create(array $data) : Movie
     {
         $prices= [700,900,950,1000,1200,1500,1700];
@@ -40,27 +38,11 @@ class MovieRepository implements MovieRepositoryInterface{
        
 
     }
-    public function store(Request  $data)
-    {
-        
-    }
-    public function show(object $data)
-    {
-        
-    }
-    public function edit(object $data)
-    {
-        
-    }
-    public function destroy(object $data)
-    {
-        
-    }
    
-    public function update( $data ) :void
+    public function update( int $id, array $data ) :void
     {
         try{
-            Movie::where('id', $data['movie_id'])->update([
+            Movie::where($id, $data['user_id'])->update([
                 'price' => $data['price'],
                 'discount' => $data['discount'],
             ]);
@@ -103,9 +85,15 @@ class MovieRepository implements MovieRepositoryInterface{
     }
 
 
-    public function getOne($id) : ? Movie
+    public function getOne(int $id) : ? Movie
     {
-        return Movie::find($id);
+        try{
+
+            return Movie::find($id);
+
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
     }
         
     
@@ -194,6 +182,59 @@ class MovieRepository implements MovieRepositoryInterface{
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         }
     }
+
+
+    public function postComment($request) : void
+    {
+        try{
+            DB::table('comments')->insert([
+                'movie_id' => $request['movie_id'],
+                'user_id' => $request['user_id'],
+                'comment' => $request['comment'],
+                'rating'=>$request['rating'],
+                'created_at' => Carbon::now()
+
+            ]);
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+    
+    public function commentExists($request) : ?array
+    {
+        try{
+            return DB::select('select * from comments where movie_id = '.$request['movie_id'].' AND user_id = '.$request['user_id'].' LIMIT 1');
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+    public function getReviews(int $movieId) : ?LengthAwarePaginator
+    {
+        try{
+            return DB::table('comments')->where('movie_id',$movieId)->orderBy('created_at','desc')->paginate(3);
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+    public function ratingAvg(int $movieId) 
+    {
+        try{
+            return  DB::table('comments')->avg('rating');;
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+
+    public function getUserReviews(int $userId) : ?LengthAwarePaginator
+    {
+       
+        try{
+            return DB::table('comments')->where('user_id',$userId)->orderBy('created_at','desc')->paginate(3);
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+    
    
 }
 

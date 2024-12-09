@@ -98,6 +98,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/cart/show/{id}',[CartController::class, 'show'])->name('cart.show');
         Route::get('/dashboard/',[UserController::class, 'dashboard'])->name('dashboard');
         Route::get('/carts/{id}',[UserController::class, 'carts'])->name('carts');
+
+        //post review
+        Route::post('/movie/review',[MovieController::class,'postReview'])->name('review.post');
     });
 });
 
