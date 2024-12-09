@@ -16,7 +16,7 @@ use App\Models\Cart;
             $this->movieService = $movieService;
         }
 
-        public function store(array $data)
+        public function store(array $data) : object
         {
             return $this->cartRepository->create($data);
            
@@ -28,8 +28,9 @@ use App\Models\Cart;
         }
         public function lastCartForUser(int $userId) : ? Cart
         {
-            return $this->cartRepository->getLastCartForUser($userId);
-           
+            $lastCart =  $this->cartRepository->getLastCartForUser($userId);
+            $lastCart->created_at->format('d-m-Y H:i');
+            return $lastCart;
         }
         public function bestSelingMovies() : ? array
         {

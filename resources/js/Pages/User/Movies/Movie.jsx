@@ -1,36 +1,57 @@
-import GuestHeader from "@/Components/GuestHeader";
+import NumberInput from "@/Components/NumberInput";
+import InputLabel from "@/Components/InputLabel";
+import InputError from "@/Components/InputError";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import { useState, useEffect } from "react";
+import PrimaryButton from "@/Components/PrimaryButton";
+import Pagination from "@/Components/Pagination";
 
 
-const Movie = ({ movie }) => {
+const Movie = ({ movie ,reviewPostedMessage,reviews}) => {
+    const user = usePage().props.auth.user;
+    reviewPostedMessage = reviewPostedMessage || '';
 
-    const dummyReviews = [
-        {
-            author: "John Doe",
-            content: "Inception is a mind-bending thriller that will keep you on the edge of your seat. The visuals are stunning and the story is incredibly well crafted.",
-            date: "2021-07-20",
-            rating: 9,
-        },
-        {
-            author: "Jane Smith",
-            content: "A cinematic masterpiece! The performances and direction are top-notch. Highly recommend for anyone who loves a good sci-fi film.",
-            date: "2021-08-15",
-            rating: 10,
-        },
-        {
-            author: "Alice Johnson",
-            content: "While the movie has some pacing issues, the overall experience is unforgettable. The soundtrack is amazing!",
-            date: "2021-09-05",
-            rating: 7,
-        },
-    ];
-
+    let backendErrors = usePage().props.errors;
+    console.log(movie);
+    
+    const [errors, setErrors] = useState({
+        text: '',
+        rating: ''
+    });
     const [cart, setCart] = useState(() => {
         const savedCart = localStorage.getItem("cart");
         return savedCart ? JSON.parse(savedCart) : []; // Parse JSON if stored as a number
     });
+    const [review, setReview] = useState({
+        text: '',
+        rating: ''
+    });
+
+    const submit = (e) => {
+        e.preventDefault();
+
+        let payload = {
+
+            'comment': review.text,
+            'rating': review.rating,
+            'movie_id': movie.id,
+            'user_id': user.id
+        }
+        if (review.text && review.rating) {
+            if (!errors.text && !errors.rating) {
+
+                router.post('/user/movie/review', payload);
+
+            }
+        } else {
+            setErrors({ ...errors, text: 'Please enter review!', rating: "PLease enter rating!" });
+
+        }
+
+        // router.post(route('user.review.post', review));
+    }
+
     useEffect(() => {
         localStorage.setItem("cart", JSON.stringify(cart));
     }, [cart]);
@@ -41,8 +62,44 @@ const Movie = ({ movie }) => {
             movie]
         ));
     };
+    const setNumberInputValue = (value) => {
+        if (isNaN(value)) {
+
+
+            setErrors({ ...errors, rating: 'Value must be a number!' });
+
+        } else {
+            setErrors({ ...errors, rating: '' });
+
+            setReview({ ...review, rating: Number(value) });
+
+            if (Number(value) > 10 || Number(value) < 1) {
+                setErrors({ ...errors, rating: 'Value must be between 1 and 10!' });
+
+            }
+        }
+
+    }
+    const setReviewText = (e) => {
+
+        setReview({ ...review, text: e.target.value });
+
+        if (e.target.value) {
+
+            setErrors({ ...errors, text: '' });
+
+
+        } else {
+
+            setErrors({ ...errors, text: "Please enter your review" });
+
+        }
+    }
+
+
     return <>
         <AuthenticatedLayout>
+            <Head title="Movie detailes" />
             <div className="max-w-screen mx-auto p-4 overflow-hidden bg-gray-100">
 
                 <div className="block lg:grid grid-cols-3 gap-0 p-3 px-6">
@@ -113,21 +170,115 @@ const Movie = ({ movie }) => {
                 </div>
 
             </div>
-            <div className="p-6">
-                <h2 className="text-2xl font-bold">Reviews</h2>
-                <div className="space-y-4 mt-4">
-                    {dummyReviews.map((review, index) => (
-                        <div key={index} className="bg-white rounded-lg shadow-md p-4">
-                            <div className="flex items-center justify-between">
-                                <h3 className="font-semibold">{review.author}</h3>
-                                <span className="text-yellow-500 font-bold">{review.rating}/10</span>
-                            </div>
-                            <p className="text-gray-600 mt-2">{review.content}</p>
-                            <p className="text-gray-500 text-sm mt-2">{review.date}</p>
+            <div className="block md:grid grid-cols-2 gap-2">
+                <div className="p-6">
+                    <h2 className="text-2xl font-bold">Reviews</h2>
+                    {
+                    reviews.data.length > 0 ?
+                    <div className="space-y-4 mt-4">
+                        {reviews.data.map((review, index) => (
+                            <div key={index} className="bg-white rounded-lg shadow-md p-4">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="font-semibold">{review.user.name}</h3>
+                                    <span className="text-yellow-500 font-bold">{review.rating}/10</span>
+                                </div>
+                                <p className="text-gray-600 mt-2">{review.comment}</p>
+                                <p className="text-gray-500 text-sm mt-2">{review.created_at}</p>
+                            </div> 
+                        ))}
+                        <Pagination links={reviews.links}  />
+
+                    </div>
+
+                    :
+                    <div className="space-y-4 mt-4">
+                        <div className="bg-white rounded-lg shadow-md p-4">
+                            No reviews posted yet
                         </div>
-                    ))}
+
+                    </div>
+
+                    }
+                    
+                </div>
+                <div className="p-6">
+                    <h2 className="text-2xl font-bold">Leave your review</h2>
+                    <div className={"text-2xl font-bold"
+                        + (reviewPostedMessage == 'Review posted successfuly!' ? ' text-green-500 font-bold' : ''
+                        )
+                        + (reviewPostedMessage == 'You already posted review for this movie!' ? ' text-red-500 font-bold' : ''
+                        )
+                    } >{reviewPostedMessage}</div>
+                    <div className="bg-white shadow-lg p-4 rounded-lg space-y-4 mt-4">
+
+                        <span className={" text-red-500"}>
+                            {backendErrors.user_id &&
+                                backendErrors.user_id}
+                            {backendErrors.movie_id &&
+                                backendErrors.movie_id}
+
+                        </span>
+                        <form onSubmit={e => submit(e)}>
+                            <div className="px-4 ">
+                                <InputLabel htmlFor="review" value="Tipe your review" />
+
+                                <textarea
+                                    id="review"
+                                    type="textarea"
+                                    name="review"
+                                    value={review.text}
+                                    className={"mt-1 block w-full rounded-lg"
+                                        + (errors.text.length > 0 ? " border-2 border-red-500" : "")
+                                    }
+                                    onChange={(e) => setReviewText(e)}
+                                />
+
+                                <span className={" text-red-500"}>
+                                    {errors.text}
+                                </span>
+                                <span className={" text-red-500"}>
+                                    {backendErrors.comment &&
+                                        backendErrors.comment}
+                                </span>
+                            </div>
+                            <div className="px-4">
+                                <InputLabel htmlFor="rating" value="Tipe your rating" />
+
+                                <input
+                                    id="rating"
+                                    type="text"
+                                    name="rating"
+                                    value={review.rating}
+                                    className={"mt-1 block w-full rounded-lg "
+                                        + (errors.rating.length > 0 ? " border-2 border-red-500" : "")
+                                    }
+
+                                    onChange={(e) => setNumberInputValue(e.target.value)}
+                                />
+                                <span className={" text-red-500"}>
+                                    {errors.rating}
+                                </span>
+                                <span className={" text-red-500"}>
+                                    {backendErrors.rating &&
+                                        backendErrors.rating}
+                                </span>
+                                {/* <InputError  value= message={errors.rating} className="mt-2" /> */}
+                            </div>
+                            <div className="ms-4 my-2">
+                                <PrimaryButton disabled={errors.text || errors.rating ? true : false}>
+                                    Post
+                                </PrimaryButton>
+                            </div>
+
+
+
+
+                        </form>
+
+                    </div>
                 </div>
             </div>
+
         </AuthenticatedLayout>
 
 

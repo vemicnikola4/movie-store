@@ -3,10 +3,8 @@
 
 namespace App\Interfaces;
 
-interface MediaRepositoryInterface{
+interface MediaRepositoryInterface extends BaseRepositoryInterface{
     
-    public function create(array $data);
-    public function getOne($id);
-    public function getOneWithPath(string $path);
+   
 
 }

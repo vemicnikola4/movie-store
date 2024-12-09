@@ -2,150 +2,153 @@ import DashboardMovieCard from "@/Components/DashboardMovieCard";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { useState } from "react";
+import Pagination from "@/Components/Pagination";
 
 
-const Dashboard = ({lastPurchasse,reviews,bestSelingMovies})=>{
-    reviews = reviews || [];
+const Dashboard = ({ lastPurchasse, userReviews, bestSelingMovies }) => {
+    userReviews = userReviews || [];
     lastPurchasse = lastPurchasse || null;
     bestSelingMovies = bestSelingMovies || null;
     let movies = [];
     let timeOfPurchase;
-    console.log(bestSelingMovies);
-    if ( lastPurchasse !== null ){
+    let day;
+    let month;
+    let hours;
+    let year;
+    let minutes;
+    console.log(userReviews);
+    if (lastPurchasse !== null) {
         movies = JSON.parse(lastPurchasse.ordered_items);
         let date = new Date(lastPurchasse.created_at);
-        timeOfPurchase = date.toLocaleDateString("en-GB") + " " + date.toLocaleTimeString("en-GB");
+        year = date.getFullYear();
+        month = date.getMonth();  // Month is 0-based (0 = January, 11 = December)
+        day = date.getDate();     // Day of the month
+        hours = date.getHours();
+        minutes = date.getMinutes();
+        timeOfPurchase = date ;
     }
     let purchassedItemsCount = 0;
     movies.forEach(element => {
-        purchassedItemsCount+=element.count;
+        purchassedItemsCount += element.count;
     });
-   
+
     return <>
-    <AuthenticatedLayout
-    header={
-            <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                User Dashboard
-            </h2>
-        }
-    >
-        <Head title="User Dashboard" />
-        <div className="block md:grid grid-cols-2 gap-2 p-4">
-            <div>
-                <div className="bg-white shadow-shadow-lg mb-2">
-                    <div className=" ps-6 py-3 font-bold text-gray-900 bg-gradient-to-b from-teal-100">
-                        <h3>
-                        Last Purchasse:
-
-                        </h3>
-                    </div>
-                    <div className=" p-2 rounded-b-md bg-white shadow-lg">
-                        {lastPurchasse ?
-                        <>
-                        <div className=" p-2">Cart id: {lastPurchasse.id}</div>
-                        <div className=" p-2">Cart Total: {lastPurchasse.cart_total} RSD</div>
-                        <div className=" p-2">Number of items: {purchassedItemsCount}</div>
-                        <div className=" p-2">Time of purchasse: {timeOfPurchase}</div>
-                        <div className="p-3">
-                            <a className="block bg-gradient-to-b from-teal-100 w-32 p-4 text-gray-900 hover:underline  hover:text-green-700 rounded-full border-2 border-green-300  font-bold hover:underline" href={`/user/cart/show/${lastPurchasse.id}`}>
-                                    See detailes
-                            </a>
-                        </div>
-                        </>
-                        
-                        
-                        :
-                        <div>
-                            No purchasses made
-                        </div>
-                        }
-                        
-                        
-                        
-                    </div>
-                    
-                    
-                    
-                </div>
-                <div className="bg-white shadow-shadow-lg">
-
-                    <div className=" ps-6 py-3 font-bold text-gray-900 bg-gradient-to-b from-teal-100">
-                        <h3 >Your reviews</h3>
-                    </div>
-                    {
-                    reviews.length > 0 ?
-                    <div>REviews</div>
-                    :
-                    <div className="p-2">
-                        No reviews posted yet
-                    </div> 
-                    }
-                </div>
-            </div>
-            <div>
-                <div className="bg-white shadow-lg mb-2">
-                    <div className=" ps-6 py-3 font-bold text-gray-900 bg-gradient-to-b from-teal-100">
-
-                        <h3 >Best Seling Movies</h3>
-                    </div>
-                    <div className=" p-2 rounded-b-md bg-white h-96 overflow-y-auto ">
-                        {bestSelingMovies ?
-                        <table>
-                            <thead>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th>Image</th>
-                                    <th>Title</th>
-                                    <th className="hidden md:table-cell">Overview</th>
-                                    <th>Realise date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                bestSelingMovies.map((movie,ind)=>( 
-                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={ind}>
-                                    
-                                    <td className="px-3 py-2">
-                                        <a href={movie.image_path}>
-                                            <img src={movie.image_path} alt="image" style={{ width: 100 }} />
-
+        <AuthenticatedLayout
+            header={
+                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                    User Dashboard
+                </h2>
+            }
+        >
+            <Head title="User Dashboard" />
+            <div className=" mx-auto p-4 bg-gray-100 block md:grid grid-cols-2">
+                <div className="block ">
+                    <div className="p-6">
+                        <h2 className="text-2xl font-bold ps-2">Last Purchasse</h2>
+                        <div className="space-y-4 mt-4">
+                            {lastPurchasse ?
+                                <div className="bg-white rounded-lg shadow-md p-4">
+                                    <div className=" p-2">Cart id: {lastPurchasse.id}</div>
+                                    <div className=" p-2">Cart Total: {lastPurchasse.cart_total} RSD</div>
+                                    <div className=" p-2">Number of items: {purchassedItemsCount}</div>
+                                    <div className=" p-2">Time of purchasse: {`${day}-${month}-${year} ${hours}:${minutes}`}</div>
+                                    <div className="p-3">
+                                        <a className="hover:underline hover:text-blue-600" href={`/user/cart/show/${lastPurchasse.id}`}>
+                                            See detailes
                                         </a>
-                                    </td>
-                                    <td className="px-3 py-2">
-                                        {movie.title}
-                                    </td>
-                                    <td className="hidden md:block px-3 py-2">
-                                        {movie.overview}
-                                    </td>
-                                    <td className="px-3 py-2">
-                                        {movie.release_date}
-                                    </td>
-                                    <td className="px-3 py-2 text-gray-900 hover:underline  hover:text-green-700">
-                                        <a className="block w-32 p-4 bg-gradient-to-b from-teal-100 rounded-full border-2 border-green-300  font-bold hover:underline text-center" href={route('user.movie.show', movie.id)}>see more</a>
-                                    </td>
-                                    
-                                    
-                                </tr>
-                                ))
-                                }
-                            </tbody>
-                        </table>
-                        :
+                                    </div>
+                                </div>
 
-                        <div>
-                            No movies sold yet
+
+                                :
+                                <div>
+                                    No purchasses made
+                                </div>
+                            }
+
+
+
                         </div>
+
+
+
+                    </div>
+                    <div className="p-6">
+                        <h2 className="text-2xl font-bold ps-2">Your Reviews</h2>
+                        {
+                            userReviews.data.length > 0 ?
+                            <div className="space-y-4 mt-4">
+                                {userReviews.data.map((review, index) => (
+                                    <div key={index} className="bg-white rounded-lg shadow-md p-4">
+                                        <div className="flex items-center justify-between">
+                                            <h3 className="font-semibold">{review.movie.title}</h3>
+                                            <span className="text-yellow-500 font-bold">{review.rating}/10</span>
+                                        </div>
+                                        <p className="text-gray-600 mt-2">{review.comment}</p>
+                                        <p className="text-gray-500 text-sm mt-2">{review.created_at}</p>
+                                    </div> 
+                                ))}
+                                <Pagination links={userReviews.links}  />
+    
+                            </div>
+                            :
+                            <div className="p-2">
+                                No reviews posted yet
+                            </div>
                         }
+                        
                     </div>
                 </div>
-            </div>
-            
+                <div className="block">
 
-        </div>
-        
-        
-    </AuthenticatedLayout>
-        
+                    <div className="p-6">
+                    <h2 className="text-2xl font-bold ps-2">Best seller movies</h2>
+                    {bestSelingMovies ?
+                        <div className="space-y-4 mt-4">
+                          
+                                    {
+                                        bestSelingMovies.map((movie, ind) => (
+                                            <div key={ind} className="bg-white rounded-lg shadow-md p-4">
+                                               
+                                                <div className="grid grid-cols-5">
+                                                    <div className="self-center justify-self-center w-32 col-span-2">
+                                                        <img src={movie.image_path} alt={movie.title} />
+
+                                                    </div>
+                                                    <div className="pt-4 col-span-2">
+                                                        <h3 className="font-semibold">{movie.title}</h3>
+                                                        <div  className="mt-2 h-32 overflow-y-auto">{movie.overview}</div>
+                                                    </div>
+                                                    <div className="self-center  text-center">
+                                                        <a className="hover:underline hover:text-blue-600" href={route('user.movie.show', movie.id)}>
+                                                            See more
+                                                        </a>
+
+                                                    </div>
+                                                </div>
+                                        </div> 
+                                        ))
+                                    }
+                                
+                        </div>
+                        :
+                        <div className="bg-white rounded-lg shadow-md p-4">
+                            <div>
+                                No movies sold yet
+                            </div>
+                        </div>
+                        }
+                        
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+        </AuthenticatedLayout>
+
     </>
 }
 

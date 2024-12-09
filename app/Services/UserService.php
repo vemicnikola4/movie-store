@@ -38,5 +38,9 @@ class UserService
             abort(403);
         }
     }
+    public function getOne(int $movieId) : ?User
+    {
+        return $this->userRepository->getOne($movieId);
+    }
 
 }

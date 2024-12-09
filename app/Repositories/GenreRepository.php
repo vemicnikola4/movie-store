@@ -3,10 +3,11 @@ namespace App\Repositories;
 use App\Models\Genre;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Collection;
+use App\Interfaces\GenreRepositoryInterface;
 
 
 
-class GenreRepository 
+class GenreRepository implements GenreRepositoryInterface
 {
 
     public function __construct(
@@ -14,10 +15,10 @@ class GenreRepository
     ){}
 
 
-    public function create( array $data) : void
+    public function create( array $data) : Genre
     {
         try {
-            Genre::create([
+            return Genre::create([
                 'id'=>$data['id'],
                 'name'=>$data['name']
             ]);
@@ -28,7 +29,7 @@ class GenreRepository
         } 
 
     }
-    public function getOne( $id) : Genre
+    public function getOne( $id) : ?Genre
     {
         try {
             return Genre::find($id);
@@ -69,5 +70,21 @@ class GenreRepository
             // Handle any other exceptions
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         }
+    }
+    public function update(int $id, array $data) : void
+    { 
+        try{
+            $cart = Cart::find($id);
+            $cart->update([
+                //end this
+                
+            ]);
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
+    public function getAll(): Collection 
+    {
+        
     }
 }

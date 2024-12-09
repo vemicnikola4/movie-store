@@ -5,6 +5,8 @@ use App\Interfaces\PersonRepositoryInterface;
 use App\Models\Person;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Collection;
+
 
 class PersonRepository implements PersonRepositoryInterface{
     public function __construct(
@@ -56,6 +58,14 @@ class PersonRepository implements PersonRepositoryInterface{
             // Handle any other exceptions
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         } 
+    }
+    public function getAll() : Collection
+    {
+
+    }
+    public function update(int $id, array $data) : void
+    {
+        
     }
     // 
     //*** */

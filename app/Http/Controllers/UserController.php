@@ -33,9 +33,11 @@ class UserController extends Controller
     {   
         $lastPurchasse = $this->cartService->lastCartForUser(Auth::user()->id);
         $bestSelingMovies = $this->cartService->bestSelingMovies();
+        $userReviews = $this->movieService->userReviews(Auth::user()->id);
         return inertia('User/Dashboard',[
             'lastPurchasse'=> $lastPurchasse,
-            'bestSelingMovies'=>$bestSelingMovies
+            'bestSelingMovies'=>$bestSelingMovies,
+            'userReviews'=>$userReviews,
         ]);
     }
     public function carts (Request $request)

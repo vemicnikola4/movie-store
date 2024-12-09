@@ -1,9 +1,8 @@
 <?php
 namespace App\Interfaces;
 
-interface PersonRepositoryInterface{
+interface PersonRepositoryInterface extends BaseRepositoryInterface{
     
-    public function create(array $person);
-    public function deleteAll();
+    
 
 }

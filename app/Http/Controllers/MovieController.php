@@ -9,7 +9,7 @@ use App\Services\MovieService;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Redirect;
 
 
 
@@ -58,9 +58,12 @@ class MovieController extends Controller
     {
 
         $movie = $this->movieService->showMovie($request['id']);
+        $reviews = $this->movieService->getAllReviews($request['id']);
         if ( Auth::check() ){
             return inertia("User/Movies/Movie",[
                 'movie'=>$movie,
+                'reviewPostedMessage'=>session('reviewPostedMessage'),
+                'reviews'=>$reviews
                 
             ]);
 
@@ -95,5 +98,25 @@ class MovieController extends Controller
     public function destroy(Movie $movie)
     {
         //
+    }
+
+    public function postReview(Request $request){
+        
+        
+        $validated = $request->validate([
+            'comment' => 'required|string|min:5',
+            'rating' => 'required|integer|min:1|max:10',
+            'user_id' => 'required|integer|exists:users,id',
+            'movie_id' => 'required|integer|exists:movies,id',
+         ]);
+
+        $reviewPostedMessage = $this->movieService->postReview($request);
+        // $movie = $this->movieService->showMovie($request['movie_id']);
+
+        return Redirect::route('user.movie.show',$request['movie_id'])
+        ->with('reviewPostedMessage', $reviewPostedMessage );
+        
+
+       
     }
 }

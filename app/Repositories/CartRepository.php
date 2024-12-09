@@ -17,10 +17,10 @@ class CartRepository{
         protected Cart $model
     ){}
 
-    public function create( array $data) 
+    public function create( array $data) : Cart
     {
         try {
-             $cart = Cart::create([
+             return $cart = Cart::create([
                 'user_id'=> Auth::user()->id,
                 'ordered_items'=>json_encode($data['jsonCart']),
                 'created_at'=>now(),
@@ -39,6 +39,17 @@ class CartRepository{
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         } 
 
+    }
+    public function getAll() : Collection 
+    {
+        try {
+            return Cart::all();
+           
+           
+       } catch (\Exception $e) {
+           // Handle any other exceptions
+           throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+       } 
     }
     public function getCartsForUser( int $id ) : ?Collection
     { 
@@ -76,9 +87,10 @@ class CartRepository{
         } 
 
     }
-    public function soldMoviesCount($id) 
+    public function soldMoviesCount($id) : ?int
     { 
         try {
+            
            return DB::table('ordered_items')->where('movie_id',$id)->count();
 
             

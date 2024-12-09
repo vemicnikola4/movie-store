@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Models\Movie;
 use App\Models\Media;
+use App\Models\User;
 
 use App\Interfaces\MovieRepositoryInterface;
 use App\Repositories\MovieRepository;
@@ -16,8 +17,9 @@ use App\Services\ApiService;
 use App\Services\GenreService;
 use App\Services\MediaService;
 use App\Services\PeopleService;
+use App\Services\UserService;
 use Illuminate\Pagination\LengthAwarePaginator;
-
+use Carbon\Carbon;
 
 
 
@@ -265,7 +267,7 @@ class MovieService
             $this->movieRepository->massUpdateDiscount($data);
 
         }else{
-            $this->movieRepository->update($data);
+            $this->movieRepository->update($data['id'],$data);
 
         }
 
@@ -286,8 +288,10 @@ class MovieService
         $movie = $this->movieRepository->getOne($id);
         $media = $this->mediaService->getOne($movie->media_id);
         $credits =  $this->movieRepository->credits($movie->id);
+        $ratingAvg =  $this->movieRepository->ratingAvg($movie->id);
 
         $movie['genres']=$movie->genres;
+        $movie['rating']=number_format($ratingAvg, 1, ',', ' ');
         $movie['image_path'] = asset('storage/'.$media->path);
 
         $movieCast = json_decode($credits[0]->cast);
@@ -336,7 +340,41 @@ class MovieService
 
         return $movies;
     }
+    public function postReview(Request $request ) : ?string
+    {
+        if(  !$this->movieRepository->commentExists($request)  ){
+            $this->movieRepository->postComment($request);
 
+            return "Review posted successfuly!";
+            
+        }else{
+            return "You already posted review for this movie!";
+
+        }
+        
+    }
+    public function getAllReviews(int $movieId) : ?LengthAwarePaginator
+    {
+        $userService = app(UserService::class);
+        $reviews =  $this->movieRepository->getReviews($movieId);
+        // dd($reviews);
+        foreach($reviews as $review ){
+            $review->user = $userService->getOne($review->user_id);
+        }
+        return $reviews;
+    }
+    public function userReviews($userId) :  ?LengthAwarePaginator
+    {
+        $reviews = $this->movieRepository->getUserReviews($userId);
+        // dd($reviews);
+        foreach($reviews as $review ){
+            $review->movie =$this->getOne($review->movie_id);
+            $date = \DateTime::createFromFormat('Y-m-d H:i:s', $review->created_at);
+            $review->created_at = $date->format('d-m-Y H:i');
+        }
+        return $reviews;
+ 
+    }
 
     
 }
