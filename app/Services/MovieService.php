@@ -20,6 +20,8 @@ use App\Services\PeopleService;
 use App\Services\UserService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 
 
 
@@ -289,6 +291,11 @@ class MovieService
         $media = $this->mediaService->getOne($movie->media_id);
         $credits =  $this->movieRepository->credits($movie->id);
         $ratingAvg =  $this->movieRepository->ratingAvg($movie->id);
+        if ( Auth::user()->is_admin ){
+            $numberOdPurchasess = $this->movieRepository->numberOfPurchasess($movie->id);
+            // $purchasessTotall = $this->movieRepository->purchasessTotall($movie->id);
+            $movie['purchasess_count'] =  $numberOdPurchasess;
+        }
 
         $movie['genres']=$movie->genres;
         $movie['rating']=number_format($ratingAvg, 1, ',', ' ');

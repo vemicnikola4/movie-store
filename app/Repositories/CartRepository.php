@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\Cart;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 
 
 
@@ -51,10 +53,22 @@ class CartRepository{
            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
        } 
     }
-    public function getCartsForUser( int $id ) : ?Collection
+    public function getCartsForUser( int $id ) : ?LengthAwarePaginator
     { 
         try {
-             return Cart::where('user_id',$id)->get();
+             return Cart::where('user_id',$id)->paginate(10);
+            
+            
+        } catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        } 
+
+    }
+    public function getAdminCartsForUser( int $id ) : ?Collection
+    { 
+        try {
+             return Cart::where('user_id',$id)->orderBy('created_at')->limit(10)->get();
             
             
         } catch (\Exception $e) {
@@ -100,5 +114,91 @@ class CartRepository{
         } 
 
     }
+    public function userCartsCount(int $userId) : ?int
+    { 
+        try {
+            
+           return Cart::where('user_id', $userId)->count();
+
+            
+        } catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        } 
+
+    }
+    public function userCartsSum(int $userId) : ?int
+    { 
+        try {
+            
+           return Cart::where('user_id', $userId)->sum('cart_total');
+
+            
+        } catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        } 
+
+    }
+    public function ratedMovies() : ?array
+    { 
+        try {
+            
+            return DB::select('select DISTINCT movie_id from comments ');
+
+
+            
+        } catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        } 
+
+    }
+    public function  movieRatingAvg(int $movieId) : ?int
+    { 
+        try {
+            
+            return  DB::table('comments')->where('movie_id', $movieId)->avg('rating');
+
+
+
+            
+        } catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        } 
+
+    }
+    public function  getBuyers() : ?Collection
+    { 
+        try {
+            
+            return  Cart::select('user_id')->distinct()->get();;
+
+
+
+            
+        } catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        } 
+
+    }
+    public function countBuys(int $userId) : int
+    {
+        try {
+            
+            return  Cart::select('user_id')->where('user_id', $userId)->count();;
+
+
+
+            
+        } catch (\Exception $e) {
+            // Handle any other exceptions
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        } 
+
+    }
+   
 
 }

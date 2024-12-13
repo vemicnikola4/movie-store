@@ -42,7 +42,7 @@ class UserController extends Controller
     }
     public function carts (Request $request)
     {
-        $carts = $this->cartService->getUserCarts($request);
+        $carts = $this->cartService->getUserCarts($request['id']);
         return inertia('User/Carts/Index',[
             'carts'=>$carts,
         ]);

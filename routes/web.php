@@ -65,6 +65,9 @@ Route::middleware('guest')->group(function () {
     
             //admin users routes
             Route::get('/user',[AdminController::class,'users'])->name('user');
+            Route::get('/user/dashboard/{id}',[AdminController::class,'userDashboard'])->name('user.dashboard');
+            Route::get('/user/carts/{id}',[AdminController::class,'userCarts'])->name('user.carts');
+            Route::get('user/cart/{id}',[AdminController::class,'userCartShow'])->name('cart.show');
     
             
         });
@@ -96,7 +99,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/cart',[UserController::class, 'cart'])->name('cart');
         Route::post('/cart/store',[CartController::class, 'store'])->name('cart.store');
         Route::get('/cart/show/{id}',[CartController::class, 'show'])->name('cart.show');
-        Route::get('/dashboard/',[UserController::class, 'dashboard'])->name('dashboard');
+        Route::get('/dashboard',[UserController::class, 'dashboard'])->name('dashboard');
         Route::get('/carts/{id}',[UserController::class, 'carts'])->name('carts');
 
         //post review
