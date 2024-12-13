@@ -219,7 +219,7 @@ class MovieRepository implements MovieRepositoryInterface{
     public function ratingAvg(int $movieId) 
     {
         try{
-            return  DB::table('comments')->avg('rating');;
+            return  DB::table('comments')->where('movie_id', $movieId)->avg('rating');
         }catch(\Exception $e){
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         }
@@ -234,7 +234,14 @@ class MovieRepository implements MovieRepositoryInterface{
             throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         }
     }
-    
+    public function numberOfPurchasess(int $movieId) 
+    {
+        try{
+            return  DB::table('ordered_items')->where('movie_id', $movieId)->count();
+        }catch(\Exception $e){
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
+        }
+    }
    
 }
 

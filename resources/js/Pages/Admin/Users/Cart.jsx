@@ -53,7 +53,10 @@ const Cart = ({cart})=>{
                                                         </a>
                                                     </td>
                                                     <td className="px-3 py-2 text-lg color-dark-500">
+                                                    <a href={`/admin/movie/show/${cartItem.id}`}>
                                                         {cartItem.title}
+
+                                                    </a>
                                                     </td>
                                                     <td className="px-3 py-2 text-lg color-dark-500">
                                                         {cartItem.price}
