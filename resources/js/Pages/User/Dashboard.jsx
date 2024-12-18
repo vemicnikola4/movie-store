@@ -110,17 +110,17 @@ const Dashboard = ({ lastPurchasse, userReviews, bestSelingMovies }) => {
                                         bestSelingMovies.map((movie, ind) => (
                                             <div key={ind} className="bg-white rounded-lg shadow-md p-4">
                                                
-                                                <div className="grid grid-cols-5">
-                                                    <div className="self-center justify-self-center w-32 col-span-2">
+                                                <div className="block h-fit md:grid grid-cols-5">
+                                                    <div className="block md:col-span-2 self-center justify-self-center w-32 ">
                                                         <img src={movie.image_path} alt={movie.title} />
 
                                                     </div>
-                                                    <div className="pt-4 col-span-2">
+                                                    <div className="pt-4 block md:col-span-2">
                                                         <h3 className="font-semibold">{movie.title}</h3>
                                                         <div  className="mt-2 h-32 overflow-y-auto">{movie.overview}</div>
                                                     </div>
-                                                    <div className="self-center  text-center">
-                                                        <a className="hover:underline hover:text-blue-600" href={route('user.movie.show', movie.id)}>
+                                                    <div className="self-center  m-3  block text-center">
+                                                        <a className="p-6 md:p-0 rounded-lg md:bg-inherit text-blue bg-blue-100 md:hover:underline md:hover:text-blue-600" href={route('user.movie.show', movie.id)}>
                                                             See more
                                                         </a>
 

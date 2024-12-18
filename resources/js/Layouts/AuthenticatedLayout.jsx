@@ -5,9 +5,9 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
-export default function AuthenticatedLayout({ header, children, cart}) {
+export default function AuthenticatedLayout({ header, children, cart }) {
     const user = usePage().props.auth.user;
-   
+
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
@@ -17,67 +17,67 @@ export default function AuthenticatedLayout({ header, children, cart}) {
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
-                           
+
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                               
+
                                 <NavLink
-                                    href={user.is_admin == 1 ? 
+                                    href={user.is_admin == 1 ?
                                         route('admin.dashboard') : route('dashboard')}
-                                    active={user.is_admin == 1 ? route().current('admin.dashboard'): route().current('dashboard')}
+                                    active={user.is_admin == 1 ? route().current('admin.dashboard') : route().current('dashboard')}
                                 >
                                     Dashboard
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 {
-                                user.is_admin == 1 ?
-                                <NavLink
-                                    href={route('admin.movie')}
-                                    active={route().current('admin.movie')}
-                                >
-                                    Movies
-                                </NavLink>
-                                 : 
-                                <NavLink
-                                    href={route('user.movie')}
-                                    active={route().current('user.movie')}
-                                >
-                                    Movies
-                                </NavLink>
+                                    user.is_admin == 1 ?
+                                        <NavLink
+                                            href={route('admin.movie')}
+                                            active={route().current('admin.movie')}
+                                        >
+                                            Movies
+                                        </NavLink>
+                                        :
+                                        <NavLink
+                                            href={route('user.movie')}
+                                            active={route().current('user.movie')}
+                                        >
+                                            Movies
+                                        </NavLink>
                                 }
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 {
-                                user.is_admin == 1 ?
-                                
-                                <NavLink
-                                    href={route('admin.user')}
-                                    active={route().current('admin.user')}
-                                >
-                                    Users
-                                </NavLink>
-                                :
-                                <NavLink
-                                    href={route('user.cart')}
-                                    active={route().current('user.cart')}
-                                >
-                                    Cart
-                                </NavLink>
+                                    user.is_admin == 1 ?
+
+                                        <NavLink
+                                            href={route('admin.user')}
+                                            active={route().current('admin.user')}
+                                        >
+                                            Users
+                                        </NavLink>
+                                        :
+                                        <NavLink
+                                            href={route('user.cart')}
+                                            active={route().current('user.cart')}
+                                        >
+                                            Cart
+                                        </NavLink>
                                 }
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 {
-                                user.is_admin !== 1 ?
-                                
-                                <NavLink
-                                    href={route('user.carts', user.id)}
-                                    active={route().current('user.carts',user.id)}
-                                >
-                                    Purchasess
-                                </NavLink>
-                                :
-                                null
+                                    user.is_admin !== 1 ?
+
+                                        <NavLink
+                                            href={route('user.carts', user.id)}
+                                            active={route().current('user.carts', user.id)}
+                                        >
+                                            Purchasess
+                                        </NavLink>
+                                        :
+                                        null
                                 }
                             </div>
                         </div>
@@ -183,6 +183,51 @@ export default function AuthenticatedLayout({ header, children, cart}) {
                         >
                             Dashboard
                         </ResponsiveNavLink>
+                        {
+                            user.is_admin == 1 ?
+                                <ResponsiveNavLink
+                                    href={route('admin.movie')}
+                                    active={route().current('admin.movie')}
+                                >
+                                    Movies
+                                </ResponsiveNavLink>
+                                :
+                                <ResponsiveNavLink
+                                    href={route('user.movie')}
+                                    active={route().current('user.movie')}
+                                >
+                                    Movies
+                                </ResponsiveNavLink>
+                        }
+                        {
+                            user.is_admin == 1 ?
+
+                                <ResponsiveNavLink
+                                    href={route('admin.user')}
+                                    active={route().current('admin.user')}
+                                >
+                                    Users
+                                </ResponsiveNavLink>
+                                :
+                                <ResponsiveNavLink
+                                    href={route('user.cart')}
+                                    active={route().current('user.cart')}
+                                >
+                                    Cart
+                                </ResponsiveNavLink>
+                        }
+                        {
+                            user.is_admin !== 1 ?
+
+                                <ResponsiveNavLink
+                                    href={route('user.carts', user.id)}
+                                    active={route().current('user.carts', user.id)}
+                                >
+                                    Purchasess
+                                </ResponsiveNavLink>
+                                :
+                                null
+                        }
                     </div>
 
                     <div className="border-t border-gray-200 pb-1 pt-4 dark:border-gray-600">

@@ -3,7 +3,8 @@ import { usePage } from "@inertiajs/react";
 
 export default function Index({carts,message}){
 
-    carts = carts || [];
+    carts = carts.data || [];
+    console.log(carts);
     carts.forEach(element => {
        let orderedItems =  JSON.parse(element.ordered_items);
        let date = new Date(element.created_at);

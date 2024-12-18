@@ -383,7 +383,10 @@ const Index = ({ paginator, queryParams, successMessage }) => {
                                                         </a>
                                                     </td>
                                                     <td className="px-3 py-2">
+                                                        <a href={`/admin/movie/show/${movie.id}`}>
                                                         {movie.title}
+
+                                                        </a>
                                                     </td>
                                                     <td className="px-3 py-2" >
                                                         <form onSubmit={handlePriceSubmit}>

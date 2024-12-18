@@ -105,7 +105,7 @@ const Dashboard = ({ lastPurchasse, userReviews, userCarts, user }) => {
 
                 </div>
                 <div className="block">
-                    <div className="p-6">
+                    <div className="p-6 overflow-x-auto">
                         <h2 className="text-2xl font-bold ps-2">User purchasses</h2>
 
                         <div className="space-y-4 mt-4 rounden-full">

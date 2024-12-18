@@ -12,7 +12,7 @@ const MovieCard = ({ movie , addToCart}) => {
       movie.discountedPrice = discounted.toFixed(1);
   }
   return (
-    <div className="min-w-[200px] max-w-[200px] bg-gray-300 shadow-lg shadow-white rounded-lg relative h-full">
+    <div className="min-w-[200px] block mt-4 md:mt-1 bg-gray-300 shadow-lg shadow-white rounded-lg relative h-full">
       <div className="w-full">
         <img
           className="w-full object-cover  rounded-t-lg h-40"
@@ -57,13 +57,13 @@ const MovieCard = ({ movie , addToCart}) => {
         <div className="h-32 overflow-y-auto mb-3 border-b-2">
           {movie.overview}
         </div>
-        <div className="grid grid-cols-2 gap-4 absolute bottom-0 left-0 pt-3 bg-gradient-to-b from-gray-300 to-gray-500">
+        <div className="grid grid-cols-2 gap-4 absolute bottom-0 left-0 pt-3 bg-gradient-to-b from-gray-300 to-gray-500 m-3 rounded-md">
           <div className="p-1 ">
             {
               user ? 
               <button className="text-white p-2 bg bg-sky-800 text-sm rounded-lg hover:bg-sky-600" onClick={e=>(onAddToCartClick(movie.id))}>Add to cart</button>
               :
-              <button className="text-white p-2 bg bg-sky-800 text-sm rounded-lg hover:bg-sky-600">
+              <button className="text-white p-2 bg bg-sky-800 text-sm rounded-lg hover:bg-sky-600 m-2">
                 <a href="/user/movie">Add to cart</a></button>
             }
             
