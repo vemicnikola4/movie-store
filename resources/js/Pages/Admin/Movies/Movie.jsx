@@ -6,6 +6,15 @@ import Pagination from "@/Components/Pagination";
 const Movie = ({ movie, reviews }) => {
 
     console.log(movie);
+    if ( movie.discount > 0){
+        let discount = (movie.price / 100 ) * movie.discount;
+
+        movie.discountedPrice = movie.price - discount;
+        movie.discountedPrice = movie.discountedPrice.toFixed(2)
+    }else{
+        movie.discountedPrice = null;
+    }
+    console.log(movie.discountedPrice);
 
     return <>
         <AuthenticatedLayout
@@ -31,6 +40,12 @@ const Movie = ({ movie, reviews }) => {
                         <div className="flex items-center mt-2">
                             <span className="text-blue-900 font-bold">Movie Price: {movie.price} RSD</span>
                         </div>
+                        {
+                        movie.discountedPrice && 
+                        <div className="flex items-center mt-2">
+                            <span className="text-green-900 font-bold">Discounted Price: {movie.discountedPrice} RSD {movie.discount}%</span>
+                        </div>
+                        }
                         <div className="flex items-center mt-2">
                             <span className="text-red-900 font-bold">Number of purchasses: {movie.purchasess_count !== '0' ? movie.purchasess_count : ' No purchasess made yet!'}</span>
                         </div>

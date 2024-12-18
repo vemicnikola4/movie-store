@@ -259,7 +259,7 @@ export default function Index({ paginator, queryParams }) {
                                         <div className="block  md:grid grid-cols-3 lg:grid-cols-5 gap-1 ">
                                             {
                                                 movies.map((movie, ind) => (
-                                                    <div className="pt-2">
+                                                    <div className="pt-2" key={ind}>
                                                         <MovieCard movie={movie} addToCart={addToCart} />
 
                                                     </div>
